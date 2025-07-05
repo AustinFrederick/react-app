@@ -142,13 +142,38 @@ export default function App() {
                         setMoveMode={setMoveMode}
                         onReset={handleReset}
                         onSet={handleSet}
+                        spawnAbout={spawnAbout}
+                        spawnResume={spawnResume}
                     />
 
                     {spawnedAbouts.map(({ id, x, y }) => (
-                        <About key={id} x={x} y={y} className="spawned-about" moveMode={moveMode} />
+                        <About
+                            key={id}
+                            x={x}
+                            y={y}
+                            className="spawned-about"
+                            moveMode={moveMode}
+                            onMove={(newX, newY) => {
+                                setSpawnedAbouts((prev) =>
+                                    prev.map((item) => (item.id === id ? { ...item, x: newX, y: newY } : item))
+                                );
+                            }}
+                        />
                     ))}
+
                     {spawnedResumes.map(({ id, x, y }) => (
-                        <Resume key={id} x={x} y={y} className="spawned-resume" moveMode={moveMode} />
+                        <Resume
+                            key={id}
+                            x={x}
+                            y={y}
+                            className="spawned-resume"
+                            moveMode={moveMode}
+                            onMove={(newX, newY) => {
+                                setSpawnedResumes((prev) =>
+                                    prev.map((item) => (item.id === id ? { ...item, x: newX, y: newY } : item))
+                                );
+                            }}
+                        />
                     ))}
                 </main>
 

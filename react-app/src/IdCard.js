@@ -175,7 +175,7 @@ export default function IdCard({ moveMode, setMoveMode, onReset, onSet }) {
         top: position.y - cardHeight / 2,
         border: moveableBorder,
         borderRadius: 20,
-        zIndex: 10,
+        zIndex: 20,
         transition: moveMode ? "none" : "transform 0.3s ease",
     };
 
@@ -288,27 +288,28 @@ export default function IdCard({ moveMode, setMoveMode, onReset, onSet }) {
                 </div>
             </div>
 
-            {/* Spawn About card */}
             {spawnedAbout && (
                 <About
+                    key="about"
                     x={spawnedAbout.x}
                     y={spawnedAbout.y}
                     moveMode={moveMode}
-                    onMove={(x, y) => setSpawnedAbout((prev) => ({ ...prev, x, y }))}
+                    onMove={(x, y) => setSpawnedAbout({ x, y })}
                     border={moveMode ? "2px solid #0d6efd" : "none"}
                 />
             )}
 
-            {/* Spawn Resume card */}
             {spawnedResume && (
                 <Resume
+                    key="resume"
                     x={spawnedResume.x}
                     y={spawnedResume.y}
                     moveMode={moveMode}
-                    onMove={(x, y) => setSpawnedResume((prev) => ({ ...prev, x, y }))}
+                    onMove={(x, y) => setSpawnedResume({ x, y })}
                     border={moveMode ? "2px solid #0d6efd" : "none"}
                 />
             )}
+
         </>
     );
 }

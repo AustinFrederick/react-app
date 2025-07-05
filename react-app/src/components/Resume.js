@@ -1,27 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
-export default function Resume({ x = 100, y = 100, moveMode = false, onMove, border, className }) {
-    const [visible, setVisible] = useState(false);
-    const [position, setPosition] = useState({ x, y });
+export default function Resume({ x, y, moveMode, onMove, className }) {
     const dragging = useRef(false);
     const lastPos = useRef({ x: 0, y: 0 });
+    const [velocity, setVelocity] = useState({ x: 0, y: 0 });
+    const momentumRef = useRef(null);
 
-    // Sync external x, y props
-    useEffect(() => {
-        setPosition({ x, y });
-    }, [x, y]);
+    const width = 500;
+    const height = 400;
 
-    useEffect(() => {
-        requestAnimationFrame(() => setVisible(true));
-    }, []);
+    // Slower friction for more "weight"
+    const frictionX = 0.7;
+    const frictionY = 0.65;
 
-    // Stop dragging if moveMode is disabled
-    useEffect(() => {
-        if (!moveMode) dragging.current = false;
-    }, [moveMode]);
-
-    // Bounding position inside viewport (header/footer and sides)
-    const getBoundedPosition = (x, y, width = 900, height = 700) => {
+    const getBoundedPosition = (x, y) => {
         const padding = 20;
         const headerHeight = document.querySelector("nav")?.getBoundingClientRect().bottom || 0;
         const footerTop = document.querySelector("footer")?.getBoundingClientRect().top || window.innerHeight;
@@ -46,20 +38,36 @@ export default function Resume({ x = 100, y = 100, moveMode = false, onMove, bor
         if (!dragging.current) return;
         const deltaX = e.clientX - lastPos.current.x;
         const deltaY = e.clientY - lastPos.current.y;
-        let newX = position.x + deltaX;
-        let newY = position.y + deltaY;
-
-        const bounded = getBoundedPosition(newX, newY);
-        newX = bounded.x;
-        newY = bounded.y;
-
-        setPosition({ x: newX, y: newY });
-        if (onMove) onMove(newX, newY);
+        const newPos = getBoundedPosition(x + deltaX, y + deltaY);
+        onMove(newPos.x, newPos.y);
+        setVelocity({ x: e.movementX, y: e.movementY });
         lastPos.current = { x: e.clientX, y: e.clientY };
     };
 
     const handleMouseUp = () => {
+        if (!dragging.current) return;
         dragging.current = false;
+        startMomentum();
+    };
+
+    const startMomentum = () => {
+        let vx = velocity.x;
+        let vy = velocity.y;
+        if (vx === 0 && vy === 0) return;
+
+        const animate = () => {
+            vx *= frictionX;
+            vy *= frictionY;
+            if (Math.abs(vx) < 0.5 && Math.abs(vy) < 0.5) return;
+
+            const newPos = getBoundedPosition(x + vx, y + vy);
+            onMove(newPos.x, newPos.y);
+
+            momentumRef.current = requestAnimationFrame(animate);
+        };
+
+        cancelAnimationFrame(momentumRef.current);
+        momentumRef.current = requestAnimationFrame(animate);
     };
 
     useEffect(() => {
@@ -68,8 +76,9 @@ export default function Resume({ x = 100, y = 100, moveMode = false, onMove, bor
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
+            cancelAnimationFrame(momentumRef.current);
         };
-    }, [moveMode, position]);
+    }, [moveMode, x, y, velocity]);
 
     return (
         <div
@@ -77,11 +86,8 @@ export default function Resume({ x = 100, y = 100, moveMode = false, onMove, bor
             onMouseDown={handleMouseDown}
             style={{
                 position: "absolute",
-                top: position.y,
-                left: position.x,
-                transform: visible ? "scale(1)" : "scale(0.5)",
-                opacity: visible ? 1 : 0,
-                transition: "transform 300ms ease, opacity 300ms ease",
+                top: y,
+                left: x,
                 width: 900,
                 height: 700,
                 overflowY: "auto",
@@ -93,8 +99,12 @@ export default function Resume({ x = 100, y = 100, moveMode = false, onMove, bor
                 color: "#333",
                 userSelect: moveMode ? "none" : "text",
                 fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-                zIndex: 15,border: moveMode ? "2px solid #0d6efd" : "none",
+                zIndex: 15,
+                border: moveMode ? "2px solid #0d6efd" : "none",
                 cursor: moveMode ? "grab" : "default",
+                transition: "transform 300ms ease, opacity 300ms ease",
+                transform: "scale(1)",
+                opacity: 1,
             }}
         >
             <h2
