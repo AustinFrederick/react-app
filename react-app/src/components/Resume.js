@@ -1,5 +1,5 @@
 import React from "react";
-import ReactiveBackground from "./components/ReactiveBackground";
+import ReactiveBackground from "./ReactiveBackground";
 
 export default function Resume() {
     return (

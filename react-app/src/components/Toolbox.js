@@ -1,12 +1,10 @@
-// src/components/Toolbox.js
 import React from "react";
 import { GiLockedChest } from "react-icons/gi";
 
-export default function Toolbox({ open, onToggle, children }) {
+export default function Toolbox({ open, onToggle, children, style }) {
     return (
-        <div style={toolboxStyle}>
-            <button onClick={onToggle} style={toolboxButtonStyle}>
-            </button>
+        <div style={{ ...toolboxStyle, ...style }}>
+            <button onClick={onToggle} style={toolboxButtonStyle} aria-label="Toggle Toolbox"></button>
             {open && <div style={popupMenuStyle}>{children}</div>}
         </div>
     );
@@ -24,6 +22,8 @@ const toolboxButtonStyle = {
     border: "none",
     color: "white",
     cursor: "pointer",
+    width: 40,
+    height: 40,
 };
 
 const popupMenuStyle = {
@@ -34,5 +34,8 @@ const popupMenuStyle = {
     borderRadius: "8px",
     boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
     position: "relative",
-    top: "-20px"
+    top: "-20px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
 };

@@ -4,6 +4,7 @@ import FlippingPhrase from "./FlippingPhrase";
 import { FaCog, FaArrowsAlt, FaCheck, FaUndo } from "react-icons/fa";
 import { GiLockedChest, GiOpenChest } from "react-icons/gi";
 import Toolbox from "./components/Toolbox";
+import AboutPreviewButton from "./components/AboutPreviewButton";
 
 export default function IdCard() {
     const [flipped, setFlipped] = useState(false);
@@ -20,21 +21,19 @@ export default function IdCard() {
     const lastPos = useRef({ x: 0, y: 0 });
     const momentumRef = useRef(null);
     const fadeTimeoutRef = useRef(null);
-    const cardRef = useRef(null); // Added this line
+    const cardRef = useRef(null);
 
     const cardWidth = 300;
     const cardHeight = 420;
 
-    // Phrase array declaration
     const phrases = [
         "Developer",
-        "Programmer",
-        "Full-stack Developer",
         "Problem Solver",
-        "UI Enthusiast",
+        "Full-stack Developer",
+        "Dedicated",
+        "Programmer",
     ];
 
-    // Movement handlers
     const handleMouseDown = (e) => {
         if (!moveMode) return;
         dragging.current = true;
@@ -61,12 +60,13 @@ export default function IdCard() {
     };
 
     const startMomentum = () => {
+        if(velocity.x ==0 || velocity.y ==0) return;
         let vx = velocity.x;
         let vy = velocity.y;
 
         const animate = () => {
-            vx *= 0.95;
-            vy *= 0.95;
+            vx *= 0.92;
+            vy *= 0.89;
             if (Math.abs(vx) < 0.5 && Math.abs(vy) < 0.5) return;
 
             setPosition((prev) => {
@@ -96,10 +96,9 @@ export default function IdCard() {
         };
     };
 
-    // Move mode toggle
     const toggleMoveMode = () => {
         if (moveMode) {
-            setMoveMode(false);
+            setMoveMode(true);
             setToolboxOpen(false);
             setToolboxVisible(false);
             clearFadeTimeout();
@@ -111,7 +110,6 @@ export default function IdCard() {
         }
     };
 
-    // Toolbox toggle with fade
     const toggleToolbox = () => {
         if (!moveMode) return;
 
@@ -160,7 +158,6 @@ export default function IdCard() {
         };
     }, [moveMode, position]);
 
-    // Styles
     const cardStyle = {
         perspective: "1000px",
         width: cardWidth,
@@ -233,7 +230,7 @@ export default function IdCard() {
             )}
             {moveMode && (
                 <div
-                    onClick={toggleToolbox}
+                    // onClick={toggleToolbox}
                     style={{
                         position: "fixed",
                         bottom: 20,
@@ -256,7 +253,7 @@ export default function IdCard() {
                         if (e.key === "Enter" || e.key === " ") toggleToolbox();
                     }}
                 >
-                    {toolboxOpen ? <GiOpenChest /> : <GiLockedChest />}
+                    {/*{toolboxOpen ? <GiOpenChest /> : <GiLockedChest />}*/}
                 </div>
             )}
 
@@ -271,12 +268,7 @@ export default function IdCard() {
                         transition: "opacity 300ms ease",
                     }}
                 >
-                    <div style={componentPreviewStyle} draggable>
-                        <div style={previewHeader}>About</div>
-                        <div style={{ ...grayLine, width: "80%" }}></div>
-                        <div style={{ ...grayLine, width: "60%" }}></div>
-                        <div style={{ ...grayLine, width: "70%" }}></div>
-                    </div>
+                       <AboutPreviewButton/>
 
                     <div style={componentPreviewStyle} draggable>
                         <div style={previewHeader}>Resume</div>
@@ -285,8 +277,6 @@ export default function IdCard() {
                         <div style={{ ...grayLine, width: "75%" }}></div>
                     </div>
                 </Toolbox>
-
-
             )}
 
             <div
@@ -369,7 +359,7 @@ const largeButtonStyle = {
     fontSize: "1.5rem",
     border: "2px solid #0d6efd",
     userSelect: "none",
-    margin: "10px"
+    margin: "10px",
 };
 
 const toolboxMenuStyle = {
@@ -387,6 +377,7 @@ const toolboxMenuStyle = {
     left: 20,
     zIndex: 100,
 };
+
 const componentButtonWrapperStyle = {
     background: "#444",
     color: "white",
@@ -411,7 +402,7 @@ const componentPreviewStyle = {
     marginBottom: "1rem",
     cursor: "grab",
     width: "200px",
-    border: "2px solid #0d6efd", // Bootstrap blue
+    border: "2px solid #0d6efd",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
 };
 
