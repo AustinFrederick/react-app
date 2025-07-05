@@ -358,7 +358,7 @@ const largeButtonStyle = {
     cursor: "grab",
     marginBottom: "1.5rem",
     fontSize: "1.5rem",
-    border: "1px solid #ccc",
+    border: "2px solid #0d6efd",
     userSelect: "none",
     margin: "10px"
 };
