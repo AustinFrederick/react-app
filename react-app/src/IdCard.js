@@ -271,13 +271,22 @@ export default function IdCard() {
                         transition: "opacity 300ms ease",
                     }}
                 >
-                    <button style={largeButtonStyle} draggable>
-                        About
-                    </button>
-                    <button style={largeButtonStyle} draggable>
-                        Resume
-                    </button>
+                    <div style={componentPreviewStyle} draggable>
+                        <div style={previewHeader}>About</div>
+                        <div style={{ ...grayLine, width: "80%" }}></div>
+                        <div style={{ ...grayLine, width: "60%" }}></div>
+                        <div style={{ ...grayLine, width: "70%" }}></div>
+                    </div>
+
+                    <div style={componentPreviewStyle} draggable>
+                        <div style={previewHeader}>Resume</div>
+                        <div style={{ ...grayLine, width: "90%" }}></div>
+                        <div style={{ ...grayLine, width: "65%" }}></div>
+                        <div style={{ ...grayLine, width: "75%" }}></div>
+                    </div>
                 </Toolbox>
+
+
             )}
 
             <div
@@ -377,4 +386,45 @@ const toolboxMenuStyle = {
     bottom: 100,
     left: 20,
     zIndex: 100,
+};
+const componentButtonWrapperStyle = {
+    background: "#444",
+    color: "white",
+    padding: "1rem",
+    borderRadius: "8px",
+    marginBottom: "1rem",
+    cursor: "grab",
+    width: "180px",
+    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+};
+
+const largeButtonHeader = {
+    fontSize: "1.2rem",
+    marginBottom: "0.5rem",
+};
+
+const componentPreviewStyle = {
+    background: "white",
+    color: "#333",
+    padding: "1rem",
+    borderRadius: "8px",
+    marginBottom: "1rem",
+    cursor: "grab",
+    width: "200px",
+    border: "2px solid #0d6efd", // Bootstrap blue
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+};
+
+const previewHeader = {
+    fontSize: "1.2rem",
+    fontWeight: "bold",
+    marginBottom: "0.5rem",
+    color: "#0d6efd",
+};
+
+const grayLine = {
+    height: "10px",
+    backgroundColor: "#ccc",
+    borderRadius: "4px",
+    margin: "0.3rem 0",
 };
