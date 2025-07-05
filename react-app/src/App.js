@@ -1,4 +1,4 @@
-import React, { useState, useRef  } from "react";
+import React, { useState, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./Home";
 import Projects from "./Projects";
@@ -7,11 +7,13 @@ import About from "./components/About";
 
 export default function App() {
     const [spawnedAbouts, setSpawnedAbouts] = useState([]);
+    const [spawnedResumes, setSpawnedResumes] = useState([]);
+
     const idCardRef = useRef(null);
     const resumeRef = useRef(null);
 
-    const COMPONENT_WIDTH = 500;
-    const COMPONENT_HEIGHT = 300;
+    const COMPONENT_WIDTH = 600;
+    const COMPONENT_HEIGHT = 400;
 
     const getExistingRects = () => {
         const rects = [];
@@ -28,26 +30,11 @@ export default function App() {
             rects.push(el.getBoundingClientRect());
         });
 
+        document.querySelectorAll(".spawned-resume").forEach((el) => {
+            rects.push(el.getBoundingClientRect());
+        });
+
         return rects;
-    };
-    const findNonOverlappingPosition = () => {
-        const rects = getExistingRects();
-        const maxAttempts = 100;
-
-        for (let i = 0; i < maxAttempts; i++) {
-            const x = Math.floor(Math.random() * (window.innerWidth - COMPONENT_WIDTH - 40)) + 20;
-            const y = Math.floor(Math.random() * (window.innerHeight - COMPONENT_HEIGHT - 40)) + 20;
-
-            if (!isOverlapping(x, y, rects)) {
-                return { x, y };
-            }
-        }
-
-        // Fallback: center of screen
-        return {
-            x: (window.innerWidth - COMPONENT_WIDTH) / 2,
-            y: (window.innerHeight - COMPONENT_HEIGHT) / 2
-        };
     };
 
     const isOverlapping = (x, y, rects) => {
@@ -62,6 +49,42 @@ export default function App() {
             !(r.right < newRect.left || r.left > newRect.right || r.bottom < newRect.top || r.top > newRect.bottom)
         );
     };
+
+    const getBoundedPosition = (x, y, width, height) => {
+        const xPadding = 20;
+        const yPosPadding = 65;
+        const yNegPadding = 145;
+        const minX = width / 2 + xPadding;
+        const maxX = window.innerWidth - width / 2 - xPadding;
+        const minY = height / 2 + yPosPadding;
+        const maxY = window.innerHeight - height / 2 - yNegPadding;
+        return {
+            x: Math.min(Math.max(x, minX), maxX),
+            y: Math.min(Math.max(y, minY), maxY),
+        };
+    };
+
+    const findNonOverlappingPosition = () => {
+        const rects = getExistingRects();
+        const maxAttempts = 100;
+
+        for (let i = 0; i < maxAttempts; i++) {
+            const x = Math.floor(Math.random() * (window.innerWidth - COMPONENT_WIDTH - 40)) + 20;
+            const y = Math.floor(Math.random() * (window.innerHeight - COMPONENT_HEIGHT - 40)) + 20;
+
+            if (!isOverlapping(x, y, rects)) {
+                return getBoundedPosition(x, y, COMPONENT_WIDTH, COMPONENT_HEIGHT);
+            }
+        }
+
+        return getBoundedPosition(
+            (window.innerWidth - COMPONENT_WIDTH) / 2,
+            (window.innerHeight - COMPONENT_HEIGHT) / 2,
+            COMPONENT_WIDTH,
+            COMPONENT_HEIGHT
+        );
+    };
+
     const spawnAbout = () => {
         if (spawnedAbouts.length > 0) return;
 
@@ -69,6 +92,12 @@ export default function App() {
         setSpawnedAbouts([{ id: Date.now(), x, y }]);
     };
 
+    const spawnResume = () => {
+        if (spawnedResumes.length > 0) return;
+
+        const { x, y } = findNonOverlappingPosition();
+        setSpawnedResumes([{ id: Date.now(), x, y }]);
+    };
 
     return (
         <Router>
@@ -87,15 +116,15 @@ export default function App() {
                         zIndex: 100,
                     }}
                 >
-                    <Link to="/" style={navLinkStyle}>
+                  {/*  <Link to="/" style={navLinkStyle}>
                         Home
-                    </Link>
+                    </Link>*/}
                     <a onClick={spawnAbout} style={navLinkStyle} role="button">
                         About
                     </a>
-                    <Link to="/resume" style={{ ...navLinkStyle, border: "1px solid white", padding: "0.5rem 1rem", borderRadius: "4px" }}>
+                    <a onClick={spawnResume} style={{ ...navLinkStyle, border: "1px solid white", padding: "0.5rem 1rem", borderRadius: "4px" }} role="button">
                         Resume
-                    </Link>
+                    </a>
                 </nav>
 
                 <main style={{ flexGrow: 1, position: "relative" }}>
@@ -103,12 +132,14 @@ export default function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/projects" element={<Projects />} />
                         <Route path="/resume" element={<Resume />} />
-                        {/* Removed "/about" route */}
                     </Routes>
 
-                    {/* Dynamically spawned About components */}
                     {spawnedAbouts.map(({ id, x, y }) => (
-                        <About key={id} x={x} y={y} />
+                        <About key={id} x={x} y={y} className="spawned-about" />
+                    ))}
+
+                    {spawnedResumes.map(({ id, x, y }) => (
+                        <Resume key={id} x={x} y={y} className="spawned-resume" />
                     ))}
                 </main>
 
