@@ -18,7 +18,7 @@ export default function Home() {
                     alignItems: "center",
                 }}
             >
-                <IdCard />
+                <IdCard/>
             </div>
         </ReactiveBackground>
 
