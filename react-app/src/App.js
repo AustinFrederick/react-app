@@ -1,39 +1,24 @@
-import React, { useState, useRef } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import Projects from "./Projects";
 import Resume from "./components/Resume";
 import About from "./components/About";
+import IdCard from "./IdCard";
 
 export default function App() {
     const [spawnedAbouts, setSpawnedAbouts] = useState([]);
     const [spawnedResumes, setSpawnedResumes] = useState([]);
-
-    const idCardRef = useRef(null);
-    const resumeRef = useRef(null);
+    const [moveMode, setMoveMode] = useState(false);
 
     const COMPONENT_WIDTH = 600;
     const COMPONENT_HEIGHT = 400;
 
     const getExistingRects = () => {
         const rects = [];
-
-        if (idCardRef.current) {
-            rects.push(idCardRef.current.getBoundingClientRect());
-        }
-
-        if (resumeRef.current) {
-            rects.push(resumeRef.current.getBoundingClientRect());
-        }
-
-        document.querySelectorAll(".spawned-about").forEach((el) => {
+        document.querySelectorAll(".spawned-about, .spawned-resume").forEach((el) => {
             rects.push(el.getBoundingClientRect());
         });
-
-        document.querySelectorAll(".spawned-resume").forEach((el) => {
-            rects.push(el.getBoundingClientRect());
-        });
-
         return rects;
     };
 
@@ -44,59 +29,71 @@ export default function App() {
             top: y,
             bottom: y + COMPONENT_HEIGHT,
         };
-
-        return rects.some(r =>
-            !(r.right < newRect.left || r.left > newRect.right || r.bottom < newRect.top || r.top > newRect.bottom)
+        return rects.some(
+            (r) =>
+                !(
+                    r.right < newRect.left ||
+                    r.left > newRect.right ||
+                    r.bottom < newRect.top ||
+                    r.top > newRect.bottom
+                )
         );
     };
 
-    const getBoundedPosition = (x, y, width, height) => {
-        const xPadding = 20;
-        const yPosPadding = 65;
-        const yNegPadding = 145;
-        const minX = width / 2 + xPadding;
-        const maxX = window.innerWidth - width / 2 - xPadding;
-        const minY = height / 2 + yPosPadding;
-        const maxY = window.innerHeight - height / 2 - yNegPadding;
-        return {
-            x: Math.min(Math.max(x, minX), maxX),
-            y: Math.min(Math.max(y, minY), maxY),
-        };
+    const getSpawnBounds = () => {
+        const header = document.querySelector("nav");
+        const footer = document.querySelector("footer");
+        const headerRect = header ? header.getBoundingClientRect() : { bottom: 0 };
+        const footerRect = footer ? footer.getBoundingClientRect() : { top: window.innerHeight };
+
+        const padding = 20;
+        const minX = padding;
+        const maxX = window.innerWidth - COMPONENT_WIDTH - padding;
+        const minY = headerRect.bottom + padding;
+        const maxY = footerRect.top - COMPONENT_HEIGHT - padding;
+
+        return { minX, maxX, minY, maxY };
     };
 
     const findNonOverlappingPosition = () => {
         const rects = getExistingRects();
-        const maxAttempts = 100;
+        const { minX, maxX, minY, maxY } = getSpawnBounds();
 
-        for (let i = 0; i < maxAttempts; i++) {
-            const x = Math.floor(Math.random() * (window.innerWidth - COMPONENT_WIDTH - 40)) + 20;
-            const y = Math.floor(Math.random() * (window.innerHeight - COMPONENT_HEIGHT - 40)) + 20;
-
+        for (let i = 0; i < 100; i++) {
+            const x = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
+            const y = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
             if (!isOverlapping(x, y, rects)) {
-                return getBoundedPosition(x, y, COMPONENT_WIDTH, COMPONENT_HEIGHT);
+                return { x, y };
             }
         }
-
-        return getBoundedPosition(
-            (window.innerWidth - COMPONENT_WIDTH) / 2,
-            (window.innerHeight - COMPONENT_HEIGHT) / 2,
-            COMPONENT_WIDTH,
-            COMPONENT_HEIGHT
-        );
+        return {
+            x: (minX + maxX) / 2,
+            y: (minY + maxY) / 2,
+        };
     };
 
     const spawnAbout = () => {
         if (spawnedAbouts.length > 0) return;
-
         const { x, y } = findNonOverlappingPosition();
         setSpawnedAbouts([{ id: Date.now(), x, y }]);
     };
 
     const spawnResume = () => {
         if (spawnedResumes.length > 0) return;
-
         const { x, y } = findNonOverlappingPosition();
         setSpawnedResumes([{ id: Date.now(), x, y }]);
+    };
+
+    const handleReset = () => {
+        setSpawnedAbouts([]);
+        setSpawnedResumes([]);
+        setMoveMode(false);
+    };
+
+    const handleSet = () => {
+        setMoveMode(false);
+        setSpawnedAbouts([]);
+        setSpawnedResumes([]);
     };
 
     return (
@@ -116,13 +113,19 @@ export default function App() {
                         zIndex: 100,
                     }}
                 >
-                  {/*  <Link to="/" style={navLinkStyle}>
-                        Home
-                    </Link>*/}
                     <a onClick={spawnAbout} style={navLinkStyle} role="button">
                         About
                     </a>
-                    <a onClick={spawnResume} style={{ ...navLinkStyle, border: "1px solid white", padding: "0.5rem 1rem", borderRadius: "4px" }} role="button">
+                    <a
+                        onClick={spawnResume}
+                        style={{
+                            ...navLinkStyle,
+                            border: "1px solid white",
+                            padding: "0.5rem 1rem",
+                            borderRadius: "4px",
+                        }}
+                        role="button"
+                    >
                         Resume
                     </a>
                 </nav>
@@ -134,12 +137,18 @@ export default function App() {
                         <Route path="/resume" element={<Resume />} />
                     </Routes>
 
-                    {spawnedAbouts.map(({ id, x, y }) => (
-                        <About key={id} x={x} y={y} className="spawned-about" />
-                    ))}
+                    <IdCard
+                        moveMode={moveMode}
+                        setMoveMode={setMoveMode}
+                        onReset={handleReset}
+                        onSet={handleSet}
+                    />
 
+                    {spawnedAbouts.map(({ id, x, y }) => (
+                        <About key={id} x={x} y={y} className="spawned-about" moveMode={moveMode} />
+                    ))}
                     {spawnedResumes.map(({ id, x, y }) => (
-                        <Resume key={id} x={x} y={y} className="spawned-resume" />
+                        <Resume key={id} x={x} y={y} className="spawned-resume" moveMode={moveMode} />
                     ))}
                 </main>
 
