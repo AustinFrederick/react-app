@@ -1,6 +1,4 @@
 // src/App.js
-// Main application integrating PhysicsEngine and coordinating card components.
-// Component dimensions now imported from their own modules, avoiding static constants.
 import React, {useState, useEffect, useCallback, useRef} from "react";
 import $ from "jquery";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
@@ -29,7 +27,7 @@ export default function App() {
     // ±3px/frame initial velocity
     const randomVelocity = () => Math.random() * 6 - 3;
 
-    // Initialize physics and spawn centered IdCard using its own DIMENSIONS
+    // Initialize physics and spawn centered IdCard using its own dim
     useEffect(() => {
         const engine = new PhysicsEngine({friction: 0.98, restitution: 0.7});
         engineRef.current = engine;
@@ -54,7 +52,7 @@ export default function App() {
 
         let raf;
         const loop = () => {
-            // compute bottom‐boundary at the top of your footer
+            // compute bottom‐boundary at the top of footer
             const footerEl = document.querySelector('footer');
             const screenH = footerEl
                 ? footerEl.getBoundingClientRect().top
@@ -73,7 +71,7 @@ export default function App() {
         engineRef.current.addBody(id, x, y, vx, vy, b.width, b.height);
     }, []);
 
-    // Spawn About card with its own DIMENSIONS
+    // Spawn About card with its own dim
     const spawnAbout = () => {
         if (bodiesList.some((b) => b.type === "about")) return;
         const headerH = $("nav").outerHeight(true) || 0;
@@ -93,7 +91,7 @@ export default function App() {
         setBodiesList((l) => [...l, {id: "about", type: "about", width: w1, height: h1}]);
     };
 
-    // Spawn Resume card with its own DIMENSIONS
+    // Spawn Resume card with its own dim.
     const spawnResume = () => {
         if (bodiesList.some((b) => b.type === "resume")) return;
         const headerH = $("nav").outerHeight(true) || 0;
@@ -114,7 +112,6 @@ export default function App() {
     };
 
     // Clear and stop move mode
-    // inside App()
     const handleReset = () => {
         // 1) clear everything
         engineRef.current.bodies.clear();
@@ -135,7 +132,7 @@ export default function App() {
             height
         );
 
-        // 4) reset your React list & exit move‐mode
+        // 4) reset list & exit move‐mode
         setBodiesList([{id: "idCard", type: "idCard", width, height}]);
         setMoveMode(false);
         setResetCounter((c) => c + 1);

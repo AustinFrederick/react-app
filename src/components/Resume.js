@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 const width = 800;
-const height = 800;
+const height = 750;
 export const DIMENSIONS = { width: width, height: height };
 
 export default function Resume({ x, y, moveMode, onMove, className }) {
@@ -93,8 +93,8 @@ export default function Resume({ x, y, moveMode, onMove, className }) {
                 Resume
             </h2>
 
-            <section style={{ marginBottom: "1.5rem" }}>
-                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>
+            <section style={{marginBottom: "1.5rem"}}>
+                <h3 style={{color: "#0d6efd", fontSize: "1.4rem"}}>
                     Professional Summary
                 </h3>
                 <p>
@@ -106,7 +106,40 @@ export default function Resume({ x, y, moveMode, onMove, className }) {
                 </p>
             </section>
 
-            {/* …the rest of your original Resume content unchanged… */}
+            <section style={{marginBottom: "1.5rem"}}>
+                <h3 style={{color: "#0d6efd", fontSize: "1.4rem"}}>
+                    Technical Skills
+                </h3>
+                <ul style={{paddingLeft: "1.2rem"}}>
+                    <li>Languages: JavaScript, Java, SQL, Python, C++, C#</li>
+                    <li>Frameworks: React, Spring Boot, jQuery</li>
+                    <li>Tools: Git, Azure, Postman</li>
+                    <li>Databases: SQL</li>
+                </ul>
+            </section>
+
+            <section style={{marginBottom: "1.5rem"}}>
+                <h3 style={{color: "#0d6efd", fontSize: "1.4rem"}}>
+                    Work Experience
+                </h3>
+
+                <h4 style={{margin: "0.5rem 0 0.25rem"}}>
+                    Web Applications Developer – Introba
+                </h4>
+                <p style={{margin: 0, fontStyle: "italic", color: "#666"}}>
+                    Aug 2019 – Present
+                </p>
+                <ul style={{paddingLeft: "1.2rem"}}>
+                    <li>Fusce nec turpis vel odio blandit gravida. Nullam at fermentum velit.</li>
+                    <li>Praesent vitae lectus pretium, ornare elit vitae, vulputate orci.</li>
+                    <li>Integer ac nulla dapibus, pretium urna in, tincidunt libero.</li>
+                </ul>
+            </section>
+
+            <section style={{marginBottom: "1.5rem"}}>
+                <h3 style={{color: "#0d6efd", fontSize: "1.4rem"}}>Education</h3>
+                <p>University of Kansas</p>
+            </section>
         </div>
     );
 }

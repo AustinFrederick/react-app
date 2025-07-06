@@ -1,5 +1,4 @@
 // src/components/IdCard.js
-// Refactored IdCard: top-left positioning, external drag control via onMove
 import React, { useRef, useState, useEffect } from "react";
 import myPhoto from "../20220730_171112_cr.jpg";
 import FlippingPhrase from "./FlippingPhrase";
@@ -90,6 +89,7 @@ export default function IdCard({
         borderRadius: 20,
         zIndex: 90,
         transition: moveMode ? "none" : "transform 0.3s ease",
+        userSelect: moveMode ? "none" : "auto",
     };
 
     const innerStyle = {
@@ -101,6 +101,7 @@ export default function IdCard({
         transformStyle: "preserve-3d",
         transition: "transform 0.8s",
         transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+        userSelect: moveMode ? "none" : "auto",
     };
 
     const faceStyle = {
@@ -139,6 +140,13 @@ export default function IdCard({
         justifyContent: "center",
         zIndex: 90,
     };
+    const phrases = React.useMemo(() => [
+        "Developer",
+        "Problem Solver",
+        "Full-stack Developer",
+        "Dedicated",
+        "Programmer",
+    ], []);
 
     return (
         <>
@@ -192,7 +200,7 @@ export default function IdCard({
                             }}
                         />
                         <h2 style={{ margin: 0 }}>Austin Frederick</h2>
-                        <FlippingPhrase phrases={["Developer","Problem Solver","Full-stack Developer","Dedicated","Programmer"]} interval={3000} />
+                        <FlippingPhrase phrases={phrases} interval={3000} />
                     </div>
                     {/* Back face */}
                     <div style={backFaceStyle}>

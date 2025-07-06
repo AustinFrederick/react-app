@@ -18,7 +18,7 @@ export default class PhysicsEngine {
      * @param {number} config.friction - drag factor (0 < friction < 1)
      * @param {number} config.restitution - elasticity (0 < restitution <= 1)
      */
-    constructor({ friction = 0.98, restitution = 0.8 } = {}) {
+    constructor({ friction = 1, restitution = 0.9 } = {}) {
         this.bodies = new Map();
         this.friction = friction;
         this.restitution = restitution;
