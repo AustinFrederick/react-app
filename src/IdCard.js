@@ -41,18 +41,19 @@ export default function IdCard({ moveMode, setMoveMode, onReset, onSet }) {
 
     // Position clamp function for all cards
     const getBoundedPosition = (x, y, width, height) => {
-        const padding = 20;
-        const headerHeight = document.querySelector("nav")?.getBoundingClientRect().bottom || 0;
-        const footerTop = document.querySelector("footer")?.getBoundingClientRect().top || window.innerHeight;
-        const minX = padding;
-        const maxX = window.innerWidth - width - padding;
-        const minY = headerHeight + padding;
-        const maxY = footerTop - height - padding;
+        const xPadding = 20;
+        const yPosPadding = 65;
+        const yNegPadding = 145;
+        const minX = width / 2 + xPadding;
+        const maxX = window.innerWidth - width / 2 - xPadding;
+        const minY = height / 2 + yPosPadding;
+        const maxY = window.innerHeight - height / 2 - yNegPadding;
         return {
             x: Math.min(Math.max(x, minX), maxX),
             y: Math.min(Math.max(y, minY), maxY),
         };
     };
+
 
     // Drag handlers for ID card
     const handleMouseDown = (e) => {

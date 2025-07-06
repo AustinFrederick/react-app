@@ -1,30 +1,32 @@
 import React, { useRef, useEffect, useState } from "react";
 
-export default function About({ x, y, moveMode, onMove, className }) {
+export default function Resume({ x, y, moveMode, onMove, className }) {
     const dragging = useRef(false);
     const lastPos = useRef({ x: 0, y: 0 });
     const [velocity, setVelocity] = useState({ x: 0, y: 0 });
     const momentumRef = useRef(null);
 
-    const width = 500;
-    const height = 300;
+    const width = 800;
+    const height = 800;
 
-    const frictionX = 0.8;
-    const frictionY = 0.75;
+    // Slower friction for more "weight"
+    const frictionX = 0.7;
+    const frictionY = 0.65;
 
     const getBoundedPosition = (x, y) => {
         const padding = 20;
         const headerHeight = document.querySelector("nav")?.getBoundingClientRect().bottom || 0;
         const footerTop = document.querySelector("footer")?.getBoundingClientRect().top || window.innerHeight;
         const minX = padding;
-        const maxX = window.innerWidth - width - padding;
-        const minY = headerHeight + padding;
-        const maxY = footerTop - height - padding;
+        const maxX = window.innerWidth - width - padding + 4;
+        const minY = headerHeight - padding - 30;
+        const maxY = footerTop - padding - height - 70;
         return {
             x: Math.min(Math.max(x, minX), maxX),
             y: Math.min(Math.max(y, minY), maxY),
         };
     };
+
 
     const handleMouseDown = (e) => {
         if (!moveMode) return;
@@ -87,8 +89,8 @@ export default function About({ x, y, moveMode, onMove, className }) {
                 position: "absolute",
                 top: y,
                 left: x,
-                width: 900,
-                height: 500,
+                width: width,
+                height: height,
                 overflowY: "auto",
                 backgroundColor: "white",
                 borderRadius: 16,
@@ -108,44 +110,49 @@ export default function About({ x, y, moveMode, onMove, className }) {
         >
             <h2
                 style={{
-                    fontSize: "1.8rem",
+                    fontSize: "2rem",
                     marginTop: 0,
                     borderBottom: "2px solid #0d6efd",
                     paddingBottom: "0.25rem",
                 }}
             >
-                About Me
+                Resume
             </h2>
-            <section style={{ marginBottom: "1rem" }}>
-                <h3 style={{ color: "#0d6efd", fontSize: "1.3rem" }}>Professional Career</h3>
-                <p style={{ color: "#444" }}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vel neque non
-                    libero suscipit suscipit. Vestibulum ante ipsum primis in faucibus orci luctus et
-                    ultrices posuere cubilia curae.
-                </p>
-                <p style={{ color: "#444" }}>
-                    Integer sit amet eros efficitur, faucibus metus sed, bibendum tortor.
+
+            <section style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>Professional Summary</h3>
+                <p>
+                    Highly skilled and dedicated Full Stack Developer with 6+ years of experience in designing,
+                    developing, and maintaining scalable web applications. Proficient in JavaScript, Java,
+                    React, Spring Boot, and REST APIs. Adept at problem-solving and team collaboration in fast-paced environments.
                 </p>
             </section>
-            <section>
-                <h3 style={{ color: "#0d6efd", fontSize: "1.3rem" }}>Hobbies</h3>
-                <p style={{ color: "#444" }}>Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
-                <div
-                    style={{
-                        marginTop: "1rem",
-                        height: 120,
-                        backgroundColor: "#e0e0e0",
-                        borderRadius: 12,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#999",
-                        fontSize: "1.1rem",
-                        fontStyle: "italic",
-                    }}
-                >
-                    Your Image Here
-                </div>
+
+            <section style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>Technical Skills</h3>
+                <ul style={{ paddingLeft: "1.2rem" }}>
+                    <li>Languages: JavaScript, Java, SQL, Python, C++, C#</li>
+                    <li>Frameworks: React, Spring Boot, jQuery</li>
+                    <li>Tools: Git, Azure, Postman</li>
+                    <li>Databases: SQL</li>
+                </ul>
+            </section>
+
+            <section style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>Work Experience</h3>
+
+                <h4 style={{ margin: "0.5rem 0 0.25rem" }}>Web Applications Developer – Introba</h4>
+                <p style={{ margin: 0, fontStyle: "italic", color: "#666" }}>Aug 2019 – Present</p>
+                <ul style={{ paddingLeft: "1.2rem" }}>
+                    <li>Fusce nec turpis vel odio blandit gravida. Nullam at fermentum velit.</li>
+                    <li>Praesent vitae lectus pretium, ornare elit vitae, vulputate orci.</li>
+                    <li>Integer ac nulla dapibus, pretium urna in, tincidunt libero.</li>
+                </ul>
+            </section>
+
+            <section style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>Education</h3>
+                <p>University of Kansas</p>
             </section>
         </div>
     );
