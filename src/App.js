@@ -21,6 +21,7 @@ const navLinkStyle = {
 };
 
 export default function App() {
+    const [resetCounter, setResetCounter] = useState(0);
     const [moveMode, setMoveMode] = useState(false);
     const [bodiesList, setBodiesList] = useState([]);
     const engineRef = useRef(null);
@@ -108,11 +109,33 @@ export default function App() {
     };
 
     // Clear and stop move mode
+    // inside App()
     const handleReset = () => {
-        setBodiesList([]);
+        // 1) clear everything
+        engineRef.current.bodies.clear();
+
+        // 2) re-center the IdCard
+        const { width, height } = ID_DIMENSIONS;
+        const centerX = window.innerWidth  / 2 - width  / 2;
+        const centerY = window.innerHeight / 2 - height / 2;
+
+        // 3) re-add it with zero velocity
+        engineRef.current.addBody(
+            "idCard",
+            centerX,
+            centerY,
+            0,
+            0,
+            width,
+            height
+        );
+
+        // 4) reset your React list & exit move‐mode
+        setBodiesList([{ id: "idCard", type: "idCard", width, height }]);
         setMoveMode(false);
-        engineRef.current?.bodies.clear();
+        setResetCounter((c) => c + 1);
     };
+
 
     const handleSet = () => setMoveMode(false);
 
@@ -145,6 +168,7 @@ export default function App() {
                         if (type === "idCard") {
                             return (
                                 <IdCard
+                                    key={id + `-${resetCounter}`}
                                     {...common}
                                     width={width}
                                     height={height}

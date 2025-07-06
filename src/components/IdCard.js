@@ -70,7 +70,12 @@ export default function IdCard({
             window.removeEventListener("mouseup", handleMouseUp);
         };
     }, [moveMode, x, y]);
-
+    useEffect(() => {
+        // whenever moveMode goes false, flip back to front
+        if (!moveMode) {
+            setFlipped(false);
+        }
+    }, [moveMode]);
     // Styling for card
     const borderStyle = moveMode ? "2px solid #0d6efd" : "none";
     const cardStyle = {
@@ -192,7 +197,7 @@ export default function IdCard({
                     {/* Back face */}
                     <div style={backFaceStyle}>
                         <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-                            <button onClick={() => setMoveMode(!moveMode)} style={buttonStyle} aria-pressed={moveMode}>
+                            <button onClick={() => setMoveMode(true)} style={buttonStyle} aria-pressed={moveMode}>
                                 <FaArrowsAlt />
                             </button>
                             <button onClick={() => {}} style={buttonStyle}>
