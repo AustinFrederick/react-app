@@ -113,30 +113,16 @@ export default function App() {
 
     // Clear and stop move mode
     const handleReset = () => {
-        // 1) clear everything
         engineRef.current.bodies.clear();
-
-        // 2) re-center the IdCard
-        const {width, height} = ID_DIMENSIONS;
-        const centerX = window.innerWidth / 2 - width / 2;
-        const centerY = window.innerHeight / 2 - height / 2;
-
-        // 3) re-add it with zero velocity
-        engineRef.current.addBody(
-            "idCard",
-            centerX,
-            centerY,
-            0,
-            0,
-            width,
-            height
-        );
-
-        // 4) reset list & exit move‐mode
-        setBodiesList([{id: "idCard", type: "idCard", width, height}]);
+        const { width, height } = ID_DIMENSIONS;
+        const centerX = window.innerWidth/2 - width/2;
+        const centerY = window.innerHeight/2 - height/2;
+        engineRef.current.addBody("idCard", centerX, centerY, 0, 0, width, height);
+        setBodiesList([{ id: "idCard", type: "idCard", width, height }]);
         setMoveMode(false);
-        setResetCounter((c) => c + 1);
+        setResetCounter(c => c + 1);
     };
+
 
 
     const handleSet = () => setMoveMode(false);

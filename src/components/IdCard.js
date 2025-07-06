@@ -99,11 +99,15 @@ export default function IdCard({
         border: borderStyle,
         borderRadius: 20,
         zIndex: 90,
-        transition: moveMode ? "none" : "transform 0.3s ease",
+        /* animate position as well as transform & opacity */
+        transition: moveMode
+            ? "none"
+            : "left 0.5s ease, top 0.5s ease, transform 0.3s ease, opacity 0.3s ease",
         userSelect: "none",
         transform: spawned ? "scale(1)" : "scale(0.5)",
         opacity: spawned ? 1 : 0,
     };
+
 
     const innerStyle = {
         position: "relative",
