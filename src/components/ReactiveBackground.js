@@ -1,5 +1,6 @@
 // src/components/ReactiveBackground.js
 import React, { useState, useEffect } from "react";
+import {isMobile} from "react-device-detect";
 
 export default function ReactiveBackground({ children }) {
     const [coords, setCoords] = useState({ x: 0.5, y: 0.5 });
@@ -28,7 +29,7 @@ export default function ReactiveBackground({ children }) {
     const wrapperStyle = {
         position: "relative",
         width: "100%",
-        height: "calc(100vh - 122.8px)",       // full viewport height
+        height: !isMobile?"calc(100vh - 122.8px)":"100vh",       // full viewport height
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",    // stack children vertically
