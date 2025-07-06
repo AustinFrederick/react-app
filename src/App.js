@@ -144,7 +144,7 @@ export default function App() {
         <Router>
             <div style={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>
                 <nav style={{
-                    display: isMobile ? "flex" : "none",
+                    display: !isMobile ? "flex" : "none",
                     justifyContent: "flex-end",
                     padding: "1rem 2rem",
                     gap: "1rem",

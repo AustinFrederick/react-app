@@ -154,7 +154,7 @@ export default function IdCard({
         color: "#555",
         fontSize: "1rem",
         cursor: "pointer",
-        display:  isMobile ? "flex" : "none",
+        display:  !isMobile ? "flex" : "none",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 90,
