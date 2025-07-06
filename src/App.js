@@ -60,7 +60,7 @@ export default function App() {
             const screenH = footerEl
                 ? footerEl.getBoundingClientRect().top
                 : window.innerHeight;
-            engine.step(window.innerWidth, screenH);
+            engine.step(window.innerWidth, screenH-71);
             setBodiesList((list) => [...list]);
             raf = requestAnimationFrame(loop);
         };
@@ -140,6 +140,16 @@ export default function App() {
             window.removeEventListener("resize", onResize);
         };
     }, [handleReset]);
+
+    const [mainHeight, setMainHeight] = useState(0);
+    const mainRef = useRef(null);
+    useEffect(() => {
+        if (mainRef.current) {
+            setMainHeight(mainRef.current.offsetHeight);
+        }
+    }, []); // Empty dependency array ensures this runs once after initial render
+
+
     return (
         <Router>
             <div style={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>

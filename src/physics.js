@@ -44,10 +44,10 @@ export default class PhysicsEngine {
             b.vy *= this.friction;
             b.x += b.vx;
             b.y += b.vy;
-            if (b.x <= 0) { b.x = 0; b.vx = -b.vx * this.restitution; }
-            if (b.x + b.width >= screenW) { b.x = screenW - b.width; b.vx = -b.vx * this.restitution; }
-            if (b.y <= 0) { b.y = 0; b.vy = -b.vy * this.restitution; }
-            if (b.y + b.height >= screenH) { b.y = screenH - b.height; b.vy = -b.vy * this.restitution; }
+            if (b.x <= 0) { b.x = 0; b.vx = -b.vx * this.restitution; }//left
+            if (b.x + b.width >= screenW) { b.x = screenW - b.width; b.vx = -b.vx * this.restitution; }//right
+            if (b.y <= 0) { b.y = 0; b.vy = -b.vy * this.restitution; }//top
+            if (b.y + b.height >= screenH) { b.y = screenH - b.height ; b.vy = -b.vy * this.restitution; }//bottom
         });
 
         // Body-body collisions
