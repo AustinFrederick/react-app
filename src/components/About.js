@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from "react";
+import myPhoto from "../20231003_093443.jpg";
 const width = 400;
-const height = 600;
+const height = 1040;
 export const DIMENSIONS = { width: width, height: height };
 
 export default function About({ x, y, moveMode, onMove, className }) {
@@ -94,25 +95,35 @@ export default function About({ x, y, moveMode, onMove, className }) {
             >
                 About Me
             </h2>
-            <section style={{ marginBottom: "1rem" }}>
-                <h3 style={{ color: "#0d6efd", fontSize: "1.3rem" }}>
+            <section style={{ marginBottom: "1.5rem", padding: "0 1rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.5rem", marginBottom: "0.5rem" }}>
                     Professional Career
                 </h3>
-                <p style={{ color: "#444" }}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vel
-                    neque non libero suscipit suscipit. Vestibulum ante ipsum primis in
-                    faucibus orci luctus et ultrices posuere cubilia curae.
+                <p style={{ color: "#444", marginBottom: "0.75rem", lineHeight: 1.6 }}>
+                    I launched my technical journey as an <strong>IT Intern</strong>, helping set up hardware and maintain the company's intranet.
+                    Building on that foundation, I advanced into full-stack debugging for modern codebases and optimizing application reliability.
                 </p>
-                <p style={{ color: "#444" }}>
-                    Integer sit amet eros efficitur, faucibus metus sed, bibendum tortor.
+                <p style={{ color: "#444", lineHeight: 1.6 }}>
+                    Elevated to <strong>Web Applications Developer</strong>, I spearhead the development of enterprise-grade intranet portals and bespoke internal tools that empower project managers and teams to track tasks and time estimates with precision.
+                    I’ve architected and deployed Power Apps and automated flows, and leveraged technologies including Spring Boot, C#, BASIC, C++, Python, Microsoft Power Automate, and Azure to deliver scalable, resilient solutions that drive operational efficiency.
                 </p>
             </section>
+
             <section>
-                <h3 style={{ color: "#0d6efd", fontSize: "1.3rem" }}>Hobbies</h3>
-                <p style={{ color: "#444" }}>
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem.
+                <h3 style={{color: "#0d6efd", fontSize: "1.3rem", marginBottom: "0.5rem"}}>
+                    Hobbies
+                </h3>
+                <p style={{color: "#444", lineHeight: 1.6}}>
+                    When I’m not behind my keyboard, you’ll find me chasing Colorado sunsets—hiking
+                    its rugged mountain trails or kayaking along its lakes and twisting rivers. I’m equally
+                    drawn to analog pursuits, capturing moments on film and hunting down the next
+                    gem for my vinyl collection, all while tinkering on and restoring classic
+                    arcade cabinets in my basement. Evenings often find me immersed in the latest
+                    video game or vibing at a live concert, and when travel calls, I’m first in line
+                    for a new adventure. Naturally, I’m also a fan of the Denver Nuggets
+                    and Avs.
                 </p>
-                <div
+                {/*<div
                     style={{
                         marginTop: "1rem",
                         height: 120,
@@ -126,8 +137,19 @@ export default function About({ x, y, moveMode, onMove, className }) {
                         fontStyle: "italic",
                     }}
                 >
-                    Placeholder Image Here
-                </div>
+                    <img
+                        src={myPhoto}
+                        alt="red rocks"
+                        style={{
+                            borderRadius: "5%",
+                            width: 532,
+                            height: 120,
+                            objectFit: "cover",
+                            position: "relative",
+                            justifyContent: "center"
+                        }}
+                    />
+                </div>*/}
             </section>
         </div>
     );

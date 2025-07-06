@@ -217,14 +217,14 @@ export default function IdCard({
                     </div>
                     {/* Back face */}
                     <div style={backFaceStyle}>
-                        <div style={{display: "flex", gap: "1rem", marginBottom: "1rem"}}>
+                        <div style={{display: "flex", gap: "1rem", marginBottom: "1rem", top:"60px", position:"relative"}}>
                             <button onClick={() => setMoveMode(true)} style={buttonStyle} aria-pressed={moveMode}>
                                 <FaArrowsAlt/>
                             </button>
-                            <button onClick={() => {
+                            {/*<button onClick={() => {
                             }} style={buttonStyle}>
                                 <FaCog/>
-                            </button>
+                            </button>*/}
                         </div>
                         <div
                             style={{
