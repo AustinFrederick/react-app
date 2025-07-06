@@ -29,8 +29,9 @@ export default function IdCard({
         setSpawned(true);
     }, []);
     const dragging = useRef(false);
+    const dragOffset = useRef({ x: 0, y: 0 });
     const lastPos = useRef({ x: 0, y: 0 });
-    const velocityRef = useRef({ x: 0, y: 0 });
+    // const velocityRef = useRef({ x: 0, y: 0 });
 
 
 
@@ -55,21 +56,40 @@ export default function IdCard({
         setTimeout(() => setCopiedField(null), 2000);
     };
     // Mouse/touch drag handlers
-    const handleMouseDown = (e) => {
+ /*   const handleMouseDown = (e) => {
         if (!moveMode) return;
         dragging.current = true;
         lastPos.current = { x: e.clientX, y: e.clientY };
         e.preventDefault();
-    };
+    };*/
 
+    const handleMouseDown = (e) => {
+        if (!moveMode) return;
+        dragging.current = true;
+        dragOffset.current = { x: e.clientX - x, y: e.clientY - y };
+        lastPos.current = { x: e.clientX, y: e.clientY };
+        e.preventDefault();
+    };
     useEffect(() => {
-        const handleMouseMove = (e) => {
+        /*const handleMouseMove = (e) => {
             if (!dragging.current) return;
             const dx = e.clientX - lastPos.current.x;
             const dy = e.clientY - lastPos.current.y;
             const { x: bx, y: by } = getBoundedPosition(x + dx, y + dy);
             velocityRef.current = { x: e.movementX, y: e.movementY };
             onMove(bx, by, velocityRef.current.x, velocityRef.current.y);
+            lastPos.current = { x: e.clientX, y: e.clientY };
+        };*/
+        const handleMouseMove = (e) => {
+            if (!dragging.current) return;
+            // keep grab point under cursor:
+            const rawX = e.clientX - dragOffset.current.x;
+            const rawY = e.clientY - dragOffset.current.y;
+            const { x: bx, y: by } = getBoundedPosition(rawX, rawY);
+            // compute velocity
+            const vx = e.clientX - lastPos.current.x;
+            const vy = e.clientY - lastPos.current.y;
+            onMove(bx, by, vx, vy);
             lastPos.current = { x: e.clientX, y: e.clientY };
         };
         const handleMouseUp = () => {

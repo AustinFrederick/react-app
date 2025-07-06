@@ -140,7 +140,6 @@ export default function App() {
             window.removeEventListener("resize", onResize);
         };
     }, [handleReset]);
-
     return (
         <Router>
             <div style={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>
