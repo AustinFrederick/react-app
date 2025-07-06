@@ -1,0 +1,212 @@
+// src/components/IdCard.js
+// Refactored IdCard: top-left positioning, external drag control via onMove
+import React, { useRef, useState, useEffect } from "react";
+import myPhoto from "../20220730_171112_cr.jpg";
+import FlippingPhrase from "./FlippingPhrase";
+import { FaCog, FaArrowsAlt, FaCheck, FaUndo } from "react-icons/fa";
+// Card dimensions
+const cardWidth = 300;
+const cardHeight = 420;
+export const DIMENSIONS = { width: cardWidth, height: cardHeight };
+
+export default function IdCard({
+                                   x,
+                                   y,
+                                   moveMode,
+                                   onMove,
+                                   className,
+                                   setMoveMode,
+                                   onReset,
+                                   onSet,
+                                   spawnAbout,
+                                   spawnResume,
+                               }) {
+    const [flipped, setFlipped] = useState(false);
+    const dragging = useRef(false);
+    const lastPos = useRef({ x: 0, y: 0 });
+    const velocityRef = useRef({ x: 0, y: 0 });
+
+
+
+    // Clamp top-left x/y within viewport bounds
+    const getBoundedPosition = (nx, ny) => {
+        const xPadding = 20;
+        const yPosPadding = 65;
+        const yNegPadding = 145;
+        const minX = xPadding;
+        const maxX = window.innerWidth - cardWidth - xPadding;
+        const minY = yPosPadding;
+        const maxY = window.innerHeight - cardHeight - yNegPadding;
+        return {
+            x: Math.min(Math.max(nx, minX), maxX),
+            y: Math.min(Math.max(ny, minY), maxY),
+        };
+    };
+
+    // Mouse/touch drag handlers
+    const handleMouseDown = (e) => {
+        if (!moveMode) return;
+        dragging.current = true;
+        lastPos.current = { x: e.clientX, y: e.clientY };
+        e.preventDefault();
+    };
+    const handleMouseMove = (e) => {
+        if (!dragging.current) return;
+        const dx = e.clientX - lastPos.current.x;
+        const dy = e.clientY - lastPos.current.y;
+        const { x: bx, y: by } = getBoundedPosition(x + dx, y + dy);
+        velocityRef.current = { x: e.movementX, y: e.movementY };
+        onMove(bx, by, velocityRef.current.x, velocityRef.current.y);
+        lastPos.current = { x: e.clientX, y: e.clientY };
+    };
+    const handleMouseUp = () => {
+        dragging.current = false;
+    };
+    useEffect(() => {
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("mouseup", handleMouseUp);
+        };
+    }, [moveMode, x, y]);
+
+    // Styling for card
+    const borderStyle = moveMode ? "2px solid #0d6efd" : "none";
+    const cardStyle = {
+        position: "absolute",
+        left: x,
+        top: y,
+        width: cardWidth,
+        height: cardHeight,
+        cursor: moveMode ? "grab" : "pointer",
+        perspective: "1000px",
+        border: borderStyle,
+        borderRadius: 20,
+        zIndex: 20,
+        transition: moveMode ? "none" : "transform 0.3s ease",
+    };
+
+    const innerStyle = {
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        borderRadius: 20,
+        boxShadow: "0 8px 16px rgba(0,0,0,0.3)",
+        transformStyle: "preserve-3d",
+        transition: "transform 0.8s",
+        transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+    };
+
+    const faceStyle = {
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        borderRadius: 20,
+        backfaceVisibility: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "1rem",
+        boxSizing: "border-box",
+        background: "white",
+        justifyContent: "center",
+    };
+
+    const backFaceStyle = {
+        ...faceStyle,
+        background: "#222",
+        color: "#fff",
+        transform: "rotateY(180deg)",
+        justifyContent: "flex-start",
+    };
+
+    const buttonStyle = {
+        padding: "0.5rem",
+        border: "none",
+        borderRadius: "8px",
+        backgroundColor: "white",
+        color: "#555",
+        fontSize: "1rem",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 110,
+    };
+
+    return (
+        <>
+            {/* Move controls above card when in moveMode */}
+            {moveMode && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: y - 50,
+                        left: x + cardWidth - 90,
+                        display: "flex",
+                        gap: "0.5rem",
+                        zIndex: 21,
+                    }}
+                >
+                    <button onClick={onSet} style={buttonStyle}>
+                        <FaCheck />
+                    </button>
+                    <button onClick={onReset} style={buttonStyle}>
+                        <FaUndo />
+                    </button>
+                </div>
+            )}
+
+            {/* ID Card element */}
+            <div
+                className={className}
+                style={cardStyle}
+                onMouseDown={handleMouseDown}
+                onMouseEnter={() => !moveMode && setFlipped(true)}
+                onMouseLeave={() => !moveMode && setFlipped(false)}
+                tabIndex={0}
+                onFocus={() => !moveMode && setFlipped(true)}
+                onBlur={() => !moveMode && setFlipped(false)}
+                aria-label="ID Card with contact info"
+            >
+                <div style={innerStyle}>
+                    {/* Front face */}
+                    <div style={faceStyle}>
+                        <img
+                            src={myPhoto}
+                            alt="Austin Frederick"
+                            style={{
+                                borderRadius: "50%",
+                                width: 140,
+                                height: 140,
+                                objectFit: "cover",
+                                marginBottom: "1rem",
+                                position: "relative",
+                                top: -35,
+                            }}
+                        />
+                        <h2 style={{ margin: 0 }}>Austin Frederick</h2>
+                        <FlippingPhrase phrases={["Developer","Problem Solver","Full-stack Developer","Dedicated","Programmer"]} interval={3000} />
+                    </div>
+                    {/* Back face */}
+                    <div style={backFaceStyle}>
+                        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+                            <button onClick={() => setMoveMode(!moveMode)} style={buttonStyle} aria-pressed={moveMode}>
+                                <FaArrowsAlt />
+                            </button>
+                            <button onClick={() => {}} style={buttonStyle}>
+                                <FaCog />
+                            </button>
+                        </div>
+                        <div style={{ position: "relative", top: 100 }}>
+                            <p style={{ margin: "0.25rem 0", color: "#ccc" }}><strong>Email:</strong> Freddy@AustinFrederick.com</p>
+                            <p style={{ margin: "0.25rem 0", color: "#ccc" }}><strong>Phone:</strong> (xxx) xxx xxxx</p>
+                            <p style={{ margin: "0.25rem 0", color: "#ccc" }}><strong>Location:</strong> Denver, Colorado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
