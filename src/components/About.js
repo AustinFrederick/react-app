@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from "react";
 import myPhoto from "../20231003_093443.jpg";
-const width = 400;
-const height = 1040;
+const width = 600;
+const height = 300;
 export const DIMENSIONS = { width: width, height: height };
 
 export default function About({ x, y, moveMode, onMove, className }) {
