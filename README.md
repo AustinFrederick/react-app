@@ -1,11 +1,4 @@
-
-
-
-
-
-
-
-Uploading Recording 2025-07-06 999030150.mp4…
+https://github.com/user-attachments/assets/98ffdffc-9bea-4075-8117-e1bdaeb7534e
 
 
 
