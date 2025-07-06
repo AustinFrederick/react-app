@@ -136,6 +136,7 @@ export default function IdCard({
         boxSizing: "border-box",
         background: "white",
         justifyContent: "center",
+        userSelect: moveMode ? "none" : "auto",
     };
 
     const backFaceStyle = {
@@ -144,6 +145,7 @@ export default function IdCard({
         color: "#fff",
         transform: "rotateY(180deg)",
         justifyContent: "flex-start",
+        userSelect: moveMode ? "none" : "auto",
     };
 
     const buttonStyle = {
@@ -158,6 +160,7 @@ export default function IdCard({
         alignItems: "center",
         justifyContent: "center",
         zIndex: 90,
+        userSelect: moveMode ? "none" : "auto",
     };
     const phrases = React.useMemo(() => [
         "Developer",
@@ -179,6 +182,7 @@ export default function IdCard({
                         display: "flex",
                         gap: "0.5rem",
                         zIndex: 90,
+                        userSelect: "none",
                     }}
                 >
                     <button onClick={onSet} style={buttonStyle}>

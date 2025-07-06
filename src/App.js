@@ -141,15 +141,6 @@ export default function App() {
         };
     }, [handleReset]);
 
-    const [mainHeight, setMainHeight] = useState(0);
-    const mainRef = useRef(null);
-    useEffect(() => {
-        if (mainRef.current) {
-            setMainHeight(mainRef.current.offsetHeight);
-        }
-    }, []); // Empty dependency array ensures this runs once after initial render
-
-
     return (
         <Router>
             <div style={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>
@@ -164,7 +155,8 @@ export default function App() {
                     position: "sticky",
                     top: 0,
                     zIndex: 50,
-                    height: "71px"
+                    height: "71px",
+                    userSelect: "none",
                 }}>
                     <button
                         type="button"
@@ -194,7 +186,7 @@ export default function App() {
                     </button>
                 </nav>
 
-                <main style={{flexGrow: 1, position: "relative"}}>
+                <main style={{flexGrow: 1, position: "relative", userSelect: "none",}}>
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/projects" element={<Projects/>}/>
