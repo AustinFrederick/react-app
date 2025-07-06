@@ -94,24 +94,32 @@ export default function Resume({ x, y, moveMode, onMove, className }) {
                 Resume
             </h2>
 
-            <section style={{marginBottom: "1.5rem"}}>
-                <h3 style={{color: "#0d6efd", fontSize: "1.4rem"}}>
+            {/* PROFESSIONAL SUMMARY */}
+            <section style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>
                     Professional Summary
                 </h3>
-                <p>
-                    Highly skilled and dedicated Full Stack Developer with 6+ years of
-                    experience in designing, developing, and maintaining scalable web
-                    applications. Proficient in JavaScript, Java, React, Spring Boot, and
-                    REST APIs. Adept at problem-solving and team collaboration in
-                    fast-paced environments.
+                <p style={{ color: "#444", lineHeight: 1.6 }}>
+                    I launched my technical journey as an <strong>IT Intern</strong>, helping
+                    set up hardware and maintain the company's intranet. Building on that
+                    foundation, I advanced into full-stack debugging for modern codebases
+                    and optimizing application reliability.
+                </p>
+                <p style={{ color: "#444", lineHeight: 1.6 }}>
+                    Elevated to <strong>Web Applications Developer</strong>, I manage an app
+                    used by almost everyone in the company, creating small applets,
+                    designing automated workflows, and optimizing business processes. I’ve
+                    architected and deployed Power Apps and automated flows, and helped
+                    debug other critical applications.
                 </p>
             </section>
 
-            <section style={{marginBottom: "1.5rem"}}>
-                <h3 style={{color: "#0d6efd", fontSize: "1.4rem"}}>
+            {/* TECHNICAL SKILLS */}
+            <section style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>
                     Technical Skills
                 </h3>
-                <ul style={{paddingLeft: "1.2rem"}}>
+                <ul style={{ paddingLeft: "1.2rem" }}>
                     <li>Languages: JavaScript, Java, SQL, Python, C++, C#</li>
                     <li>Frameworks: React, Spring Boot, jQuery</li>
                     <li>Tools: Git, Azure, Postman</li>
@@ -119,27 +127,39 @@ export default function Resume({ x, y, moveMode, onMove, className }) {
                 </ul>
             </section>
 
-            <section style={{marginBottom: "1.5rem"}}>
-                <h3 style={{color: "#0d6efd", fontSize: "1.4rem"}}>
-                    Work Experience
+            {/* SELECTED PROJECTS */}
+            <section style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>
+                    Selected Projects
                 </h3>
-
-                <h4 style={{margin: "0.5rem 0 0.25rem"}}>
-                    Web Applications Developer – Introba
-                </h4>
-                <p style={{margin: 0, fontStyle: "italic", color: "#666"}}>
-                    Aug 2019 – Present
-                </p>
-                <ul style={{paddingLeft: "1.2rem"}}>
-                    <li>Fusce nec turpis vel odio blandit gravida. Nullam at fermentum velit.</li>
-                    <li>Praesent vitae lectus pretium, ornare elit vitae, vulputate orci.</li>
-                    <li>Integer ac nulla dapibus, pretium urna in, tincidunt libero.</li>
+                <ul style={{ paddingLeft: "1.2rem" }}>
+                    <li>
+                        <strong>Chalkboard:</strong> A project management app where users
+                        forecast upcoming work and managers see team workloads at a glance.
+                        Features include timelines with events, phase overlays, and
+                        geospatial project mapping.
+                    </li>
+                    <li>
+                        <strong>PlanView:</strong> A large-scale medical equipment planning
+                        application. I contributed feature development, debugging,
+                        performance tuning, and integration with backend services.
+                    </li>
+                    <li>
+                        <strong>Power Platform Solutions:</strong> Designed and deployed
+                        Power Apps and Power Automate flows that streamlined data entry,
+                        approvals, and reporting, cutting manual tasks by 70%.
+                    </li>
                 </ul>
             </section>
 
-            <section style={{marginBottom: "1.5rem"}}>
-                <h3 style={{color: "#0d6efd", fontSize: "1.4rem"}}>Education</h3>
-                <p>University of Kansas</p>
+            {/* EDUCATION */}
+            <section style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ color: "#0d6efd", fontSize: "1.4rem" }}>
+                    Education
+                </h3>
+                <p style={{ margin: "0.25rem 0", color: "#444" }}>
+                    <strong>University of Kansas</strong>
+                </p>
             </section>
         </div>
     );

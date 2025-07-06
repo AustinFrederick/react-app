@@ -124,9 +124,19 @@ export default function App() {
     };
 
 
-
     const handleSet = () => setMoveMode(false);
+    // Reset on window resize
+    useEffect(() => {
+        const onResize = () => {
+            // re‐center ID and clear others whenever the window size changes
+            handleReset();
+        };
 
+        window.addEventListener("resize", onResize);
+        return () => {
+            window.removeEventListener("resize", onResize);
+        };
+    }, [handleReset]);
     return (
         <Router>
             <div style={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>
