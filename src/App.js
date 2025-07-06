@@ -7,6 +7,8 @@ import Projects from "./Projects";
 import Resume, {DIMENSIONS as RESUME_DIMENSIONS} from "./components/Resume";
 import About, {DIMENSIONS as ABOUT_DIMENSIONS} from "./components/About";
 import IdCard, {DIMENSIONS as ID_DIMENSIONS} from "./components/IdCard";
+import { isMobile } from 'react-device-detect';
+
 import PhysicsEngine from "./physics";
 
 // Nav link styling
@@ -122,9 +124,7 @@ export default function App() {
         setBodiesList([{ id: "idCard", type: "idCard", width, height }]);
         setMoveMode(false);
         setResetCounter(c => c + 1);
-    }, [
-            /* no-changing dependencies: engineRef, ID_DIMENSIONS, setBodiesList, setMoveMode, setResetCounter */
-        ]);
+    }, [/* no-changing dependencies: engineRef, ID_DIMENSIONS, setBodiesList, setMoveMode, setResetCounter */]);
 
 
     const handleSet = () => setMoveMode(false);
@@ -144,7 +144,7 @@ export default function App() {
         <Router>
             <div style={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>
                 <nav style={{
-                    display: "flex",
+                    display: isMobile ? "flex" : "none",
                     justifyContent: "flex-end",
                     padding: "1rem 2rem",
                     gap: "1rem",

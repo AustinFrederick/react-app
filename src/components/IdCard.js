@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 import myPhoto from "../20220730_171112_cr.jpg";
 import FlippingPhrase from "./FlippingPhrase";
 import {  FaArrowsAlt, FaCheck, FaUndo,FaRegCopy } from "react-icons/fa";
+import {isMobile} from "react-device-detect";
 // Card dimensions
 const cardWidth = 350;
 const cardHeight = 420;
@@ -153,7 +154,7 @@ export default function IdCard({
         color: "#555",
         fontSize: "1rem",
         cursor: "pointer",
-        display: "flex",
+        display:  isMobile ? "flex" : "none",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 90,
