@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, {useRef, useEffect, useState} from "react";
 const width = 400;
 const height = 600;
 export const DIMENSIONS = { width: width, height: height };
@@ -7,6 +7,8 @@ export default function About({ x, y, moveMode, onMove, className }) {
     const dragging = useRef(false);
     const lastPos = useRef({ x: 0, y: 0 });
     const velocityRef = useRef({ x: 0, y: 0 });
+    const [spawned, setSpawned] = useState(false);
+    useEffect(() => { setSpawned(true) }, []);
 
 
     const getBoundedPosition = (x, y) => {
@@ -78,8 +80,8 @@ export default function About({ x, y, moveMode, onMove, className }) {
                 border: moveMode ? "2px solid #0d6efd" : "none",
                 cursor: moveMode ? "grab" : "default",
                 transition: "transform 300ms ease, opacity 300ms ease",
-                transform: "scale(1)",
-                opacity: 1,
+                transform: spawned ? "scale(1)" : "scale(0.5)",
+                opacity: spawned ? 1 : 0,
             }}
         >
             <h2

@@ -2,9 +2,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import myPhoto from "../20220730_171112_cr.jpg";
 import FlippingPhrase from "./FlippingPhrase";
-import { FaCog, FaArrowsAlt, FaCheck, FaUndo } from "react-icons/fa";
+import { FaCog, FaArrowsAlt, FaCheck, FaUndo,FaRegCopy } from "react-icons/fa";
 // Card dimensions
-const cardWidth = 300;
+const cardWidth = 350;
 const cardHeight = 420;
 export const DIMENSIONS = { width: cardWidth, height: cardHeight };
 
@@ -21,6 +21,12 @@ export default function IdCard({
                                    spawnResume,
                                }) {
     const [flipped, setFlipped] = useState(false);
+    const [spawned, setSpawned] = useState(false);
+    const [copiedField, setCopiedField] = useState(null);
+    useEffect(() => {
+        // trigger the animation on mount
+        setSpawned(true);
+    }, []);
     const dragging = useRef(false);
     const lastPos = useRef({ x: 0, y: 0 });
     const velocityRef = useRef({ x: 0, y: 0 });
@@ -42,6 +48,11 @@ export default function IdCard({
         };
     };
 
+    const handleCopy = (label, value) => {
+        navigator.clipboard.writeText(value);
+        setCopiedField(label);
+        setTimeout(() => setCopiedField(null), 2000);
+    };
     // Mouse/touch drag handlers
     const handleMouseDown = (e) => {
         if (!moveMode) return;
@@ -89,7 +100,9 @@ export default function IdCard({
         borderRadius: 20,
         zIndex: 90,
         transition: moveMode ? "none" : "transform 0.3s ease",
-        userSelect: moveMode ? "none" : "auto",
+        userSelect: "none",
+        transform: spawned ? "scale(1)" : "scale(0.5)",
+        opacity: spawned ? 1 : 0,
     };
 
     const innerStyle = {
@@ -204,18 +217,60 @@ export default function IdCard({
                     </div>
                     {/* Back face */}
                     <div style={backFaceStyle}>
-                        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+                        <div style={{display: "flex", gap: "1rem", marginBottom: "1rem"}}>
                             <button onClick={() => setMoveMode(true)} style={buttonStyle} aria-pressed={moveMode}>
-                                <FaArrowsAlt />
+                                <FaArrowsAlt/>
                             </button>
-                            <button onClick={() => {}} style={buttonStyle}>
-                                <FaCog />
+                            <button onClick={() => {
+                            }} style={buttonStyle}>
+                                <FaCog/>
                             </button>
                         </div>
-                        <div style={{ position: "relative", top: 100 }}>
-                            <p style={{ margin: "0.25rem 0", color: "#ccc" }}><strong>Email:</strong> Freddy@AustinFrederick.com</p>
-                            <p style={{ margin: "0.25rem 0", color: "#ccc" }}><strong>Phone:</strong> (xxx) xxx xxxx</p>
-                            <p style={{ margin: "0.25rem 0", color: "#ccc" }}><strong>Location:</strong> Denver, Colorado</p>
+                        <div
+                            style={{
+                                position: "relative",
+                                top: 100,
+                                padding: "0 1rem",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "0.75rem",
+                                width:"100%"
+                            }}
+                        >
+                            {[
+                                {label: "Email", value: "Freddy@AustinFrederick.com"},
+                                {label: "Phone", value: "(xxx) xxx xxxx"},
+                                {label: "Location", value: "Denver, Colorado"},
+                            ].map(({label, value}) => (
+                                <div
+                                    key={label}
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        padding: "0.25rem 0",
+                                        color: "#ccc",
+                                        fontSize: "0.95rem",
+                                    }}
+                                >
+                                  <span>
+                                    <strong style={{marginRight: "0.5rem"}}>{label}:</strong>
+                                    <span style={{fontWeight: 400}}>{value}</span>
+                                  </span>
+                                    {/* Only Email & Phone get a copy icon */}
+                                    {label !== "Location" && (
+                                        copiedField === label ? (
+                                            <span style={{ fontSize: "0.75rem", color: "#ccc",marginLeft: "10px" }}>Copied!</span>
+                                        ) : (
+                                            <FaRegCopy
+                                                onClick={() => handleCopy(label, value)}
+                                                style={{ cursor: "pointer", marginLeft: "10px" }}
+                                                title={`Copy ${label.toLowerCase()}`}
+                                            />
+                                        )
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
