@@ -88,7 +88,7 @@ export default function IdCard({
         perspective: "1000px",
         border: borderStyle,
         borderRadius: 20,
-        zIndex: 20,
+        zIndex: 90,
         transition: moveMode ? "none" : "transform 0.3s ease",
     };
 
@@ -137,7 +137,7 @@ export default function IdCard({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        zIndex: 110,
+        zIndex: 90,
     };
 
     return (
@@ -151,7 +151,7 @@ export default function IdCard({
                         left: x + cardWidth - 90,
                         display: "flex",
                         gap: "0.5rem",
-                        zIndex: 21,
+                        zIndex: 90,
                     }}
                 >
                     <button onClick={onSet} style={buttonStyle}>

@@ -1,14 +1,14 @@
 // src/App.js
 // Main application integrating PhysicsEngine and coordinating card components.
 // Component dimensions now imported from their own modules, avoiding static constants.
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import $ from "jquery";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Home from "./Home";
 import Projects from "./Projects";
-import Resume, { DIMENSIONS as RESUME_DIMENSIONS } from "./components/Resume";
-import About, { DIMENSIONS as ABOUT_DIMENSIONS } from "./components/About";
-import IdCard, { DIMENSIONS as ID_DIMENSIONS } from "./components/IdCard";
+import Resume, {DIMENSIONS as RESUME_DIMENSIONS} from "./components/Resume";
+import About, {DIMENSIONS as ABOUT_DIMENSIONS} from "./components/About";
+import IdCard, {DIMENSIONS as ID_DIMENSIONS} from "./components/IdCard";
 import PhysicsEngine from "./physics";
 
 // Nav link styling
@@ -31,10 +31,10 @@ export default function App() {
 
     // Initialize physics and spawn centered IdCard using its own DIMENSIONS
     useEffect(() => {
-        const engine = new PhysicsEngine({ friction: 0.98, restitution: 0.7 });
+        const engine = new PhysicsEngine({friction: 0.98, restitution: 0.7});
         engineRef.current = engine;
 
-        const { width: w0, height: h0 } = ID_DIMENSIONS;
+        const {width: w0, height: h0} = ID_DIMENSIONS;
         const startX = window.innerWidth / 2 - w0 / 2;
         const startY = window.innerHeight / 2 - h0 / 2;
 
@@ -49,12 +49,17 @@ export default function App() {
         );
 
         setBodiesList([
-            { id: "idCard", type: "idCard", width: w0, height: h0 },
+            {id: "idCard", type: "idCard", width: w0, height: h0},
         ]);
 
         let raf;
         const loop = () => {
-            engine.step(window.innerWidth, window.innerHeight);
+            // compute bottom‐boundary at the top of your footer
+            const footerEl = document.querySelector('footer');
+            const screenH = footerEl
+                ? footerEl.getBoundingClientRect().top
+                : window.innerHeight;
+            engine.step(window.innerWidth, screenH);
             setBodiesList((list) => [...list]);
             raf = requestAnimationFrame(loop);
         };
@@ -72,7 +77,7 @@ export default function App() {
     const spawnAbout = () => {
         if (bodiesList.some((b) => b.type === "about")) return;
         const headerH = $("nav").outerHeight(true) || 0;
-        const { width: w1, height: h1 } = ABOUT_DIMENSIONS;
+        const {width: w1, height: h1} = ABOUT_DIMENSIONS;
         const x1 = 50;
         const y1 = headerH + 20;
 
@@ -85,14 +90,14 @@ export default function App() {
             w1,
             h1
         );
-        setBodiesList((l) => [...l, { id: "about", type: "about", width: w1, height: h1 }]);
+        setBodiesList((l) => [...l, {id: "about", type: "about", width: w1, height: h1}]);
     };
 
     // Spawn Resume card with its own DIMENSIONS
     const spawnResume = () => {
         if (bodiesList.some((b) => b.type === "resume")) return;
         const headerH = $("nav").outerHeight(true) || 0;
-        const { width: w2, height: h2 } = RESUME_DIMENSIONS;
+        const {width: w2, height: h2} = RESUME_DIMENSIONS;
         const x2 = window.innerWidth - w2 - 50;
         const y2 = headerH + 20;
 
@@ -105,7 +110,7 @@ export default function App() {
             w2,
             h2
         );
-        setBodiesList((l) => [...l, { id: "resume", type: "resume", width: w2, height: h2 }]);
+        setBodiesList((l) => [...l, {id: "resume", type: "resume", width: w2, height: h2}]);
     };
 
     // Clear and stop move mode
@@ -115,8 +120,8 @@ export default function App() {
         engineRef.current.bodies.clear();
 
         // 2) re-center the IdCard
-        const { width, height } = ID_DIMENSIONS;
-        const centerX = window.innerWidth  / 2 - width  / 2;
+        const {width, height} = ID_DIMENSIONS;
+        const centerX = window.innerWidth / 2 - width / 2;
         const centerY = window.innerHeight / 2 - height / 2;
 
         // 3) re-add it with zero velocity
@@ -131,7 +136,7 @@ export default function App() {
         );
 
         // 4) reset your React list & exit move‐mode
-        setBodiesList([{ id: "idCard", type: "idCard", width, height }]);
+        setBodiesList([{id: "idCard", type: "idCard", width, height}]);
         setMoveMode(false);
         setResetCounter((c) => c + 1);
     };
@@ -141,20 +146,33 @@ export default function App() {
 
     return (
         <Router>
-            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-                <nav style={{ display: "flex", justifyContent: "flex-end", padding: "1rem 2rem", gap: "1rem", background: "#222", color: "white", alignItems: "center", position: "sticky", top: 0, zIndex: 100 }}>
+            <div style={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>
+                <nav style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    padding: "1rem 2rem",
+                    gap: "1rem",
+                    background: "#222",
+                    color: "white",
+                    alignItems: "center",
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 50
+                }}>
                     <a onClick={spawnAbout} style={navLinkStyle} role="button">About</a>
-                    <a onClick={spawnResume} style={{ ...navLinkStyle, border: "1px solid white", padding: "0.5rem 1rem", borderRadius: "4px" }} role="button">Resume</a>
+                    <a onClick={spawnResume}
+                       style={{...navLinkStyle, border: "1px solid white", padding: "0.5rem 1rem", borderRadius: "4px"}}
+                       role="button">Resume</a>
                 </nav>
 
-                <main style={{ flexGrow: 1, position: "relative" }}>
+                <main style={{flexGrow: 1, position: "relative"}}>
                     <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/projects" element={<Projects />} />
-                        <Route path="/resume" element={<Resume />} />
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/projects" element={<Projects/>}/>
+                        <Route path="/resume" element={<Resume/>}/>
                     </Routes>
 
-                    {bodiesList.map(({ id, type, width, height }) => {
+                    {bodiesList.map(({id, type, width, height}) => {
                         const body = engineRef.current.bodies.get(id);
                         if (!body) return null;
                         const common = {
@@ -180,13 +198,19 @@ export default function App() {
                                 />
                             );
                         }
-                        if (type === "about") return <About {...common} width={width} height={height} />;
-                        if (type === "resume") return <Resume {...common} width={width} height={height} />;
+                        if (type === "about") return <About {...common} width={width} height={height}/>;
+                        if (type === "resume") return <Resume {...common} width={width} height={height}/>;
                         return null;
                     })}
                 </main>
 
-                <footer style={{ textAlign: "center", padding: "1rem", background: "#222", color: "white", fontSize: "0.9rem" }}>
+                <footer style={{
+                    textAlign: "center",
+                    padding: "1rem",
+                    background: "#222",
+                    color: "white",
+                    fontSize: "0.9rem"
+                }}>
                     &copy; {new Date().getFullYear()} Austin Frederick
                 </footer>
             </div>
