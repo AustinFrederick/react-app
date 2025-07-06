@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import myPhoto from "../20220730_171112_cr.jpg";
 import FlippingPhrase from "./FlippingPhrase";
-import { FaCog, FaArrowsAlt, FaCheck, FaUndo,FaRegCopy } from "react-icons/fa";
+import {  FaArrowsAlt, FaCheck, FaUndo,FaRegCopy } from "react-icons/fa";
 // Card dimensions
 const cardWidth = 350;
 const cardHeight = 420;
@@ -60,26 +60,27 @@ export default function IdCard({
         lastPos.current = { x: e.clientX, y: e.clientY };
         e.preventDefault();
     };
-    const handleMouseMove = (e) => {
-        if (!dragging.current) return;
-        const dx = e.clientX - lastPos.current.x;
-        const dy = e.clientY - lastPos.current.y;
-        const { x: bx, y: by } = getBoundedPosition(x + dx, y + dy);
-        velocityRef.current = { x: e.movementX, y: e.movementY };
-        onMove(bx, by, velocityRef.current.x, velocityRef.current.y);
-        lastPos.current = { x: e.clientX, y: e.clientY };
-    };
-    const handleMouseUp = () => {
-        dragging.current = false;
-    };
+
     useEffect(() => {
+        const handleMouseMove = (e) => {
+            if (!dragging.current) return;
+            const dx = e.clientX - lastPos.current.x;
+            const dy = e.clientY - lastPos.current.y;
+            const { x: bx, y: by } = getBoundedPosition(x + dx, y + dy);
+            velocityRef.current = { x: e.movementX, y: e.movementY };
+            onMove(bx, by, velocityRef.current.x, velocityRef.current.y);
+            lastPos.current = { x: e.clientX, y: e.clientY };
+        };
+        const handleMouseUp = () => {
+            dragging.current = false;
+        };
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mouseup", handleMouseUp);
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [moveMode, x, y]);
+    }, [moveMode,x,y,onMove]);
     useEffect(() => {
         // whenever moveMode goes false, flip back to front
         if (!moveMode) {

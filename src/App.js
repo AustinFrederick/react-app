@@ -16,6 +16,7 @@ const navLinkStyle = {
     fontWeight: "500",
     fontSize: "1rem",
     cursor: "pointer",
+    background: "none",
 };
 
 export default function App() {
@@ -112,7 +113,7 @@ export default function App() {
     };
 
     // Clear and stop move mode
-    const handleReset = () => {
+    const handleReset = useCallback(() => {
         engineRef.current.bodies.clear();
         const { width, height } = ID_DIMENSIONS;
         const centerX = window.innerWidth/2 - width/2;
@@ -121,7 +122,9 @@ export default function App() {
         setBodiesList([{ id: "idCard", type: "idCard", width, height }]);
         setMoveMode(false);
         setResetCounter(c => c + 1);
-    };
+    }, [
+            /* no-changing dependencies: engineRef, ID_DIMENSIONS, setBodiesList, setMoveMode, setResetCounter */
+        ]);
 
 
     const handleSet = () => setMoveMode(false);
@@ -150,12 +153,35 @@ export default function App() {
                     alignItems: "center",
                     position: "sticky",
                     top: 0,
-                    zIndex: 50
+                    zIndex: 50,
+                    height: "71px"
                 }}>
-                    <a onClick={spawnAbout} style={navLinkStyle} role="button">About</a>
-                    <a onClick={spawnResume}
-                       style={{...navLinkStyle, border: "1px solid white", padding: "0.5rem 1rem", borderRadius: "4px"}}
-                       role="button">Resume</a>
+                    <button
+                        type="button"
+                        onClick={spawnAbout}
+                        style={{
+                            ...navLinkStyle,
+                            background: "transparent",
+                            border: "none",
+                            padding: 0,
+                        }}
+                    >
+                        About
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={spawnResume}
+                        style={{
+                            ...navLinkStyle,
+                            background: "transparent",
+                            border: "1px solid white",
+                            padding: "0.5rem 1rem",
+                            borderRadius: "4px",
+                        }}
+                    >
+                        Resume
+                    </button>
                 </nav>
 
                 <main style={{flexGrow: 1, position: "relative"}}>
@@ -169,7 +195,7 @@ export default function App() {
                         const body = engineRef.current.bodies.get(id);
                         if (!body) return null;
                         const common = {
-                            key: id,
+                            // key: id,
                             x: body.x,
                             y: body.y,
                             moveMode,

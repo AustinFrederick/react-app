@@ -1,6 +1,5 @@
 // src/Home.js
 import React from "react";
-import IdCard from "./components/IdCard";
 import ReactiveBackground from "./components/ReactiveBackground";
 
 export default function Home() {

@@ -1,5 +1,4 @@
 import React, {useRef, useEffect, useState} from "react";
-import myPhoto from "../20231003_093443.jpg";
 const width = 650;
 const height = 750;
 export const DIMENSIONS = { width: width, height: height };
@@ -35,28 +34,29 @@ export default function About({ x, y, moveMode, onMove, className }) {
         lastPos.current = { x: e.clientX, y: e.clientY };
         e.preventDefault();
     };
-    const handleMouseMove = (e) => {
-        if (!dragging.current) return;
-        const deltaX = e.clientX - lastPos.current.x;
-        const deltaY = e.clientY - lastPos.current.y;
-        const newPos = getBoundedPosition(x + deltaX, y + deltaY);
-        velocityRef.current = { x: e.movementX, y: e.movementY };
-        onMove(newPos.x, newPos.y, velocityRef.current.x, velocityRef.current.y);
-        lastPos.current = { x: e.clientX, y: e.clientY };
-    };
+
     const handleMouseUp = () => {
         if (!dragging.current) return;
         dragging.current = false;
     };
 
     useEffect(() => {
+        const handleMouseMove = (e) => {
+            if (!dragging.current) return;
+            const deltaX = e.clientX - lastPos.current.x;
+            const deltaY = e.clientY - lastPos.current.y;
+            const newPos = getBoundedPosition(x + deltaX, y + deltaY);
+            velocityRef.current = { x: e.movementX, y: e.movementY };
+            onMove(newPos.x, newPos.y, velocityRef.current.x, velocityRef.current.y);
+            lastPos.current = { x: e.clientX, y: e.clientY };
+        };
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mouseup", handleMouseUp);
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [moveMode, x, y]);
+    }, [moveMode, x, y, onMove]);
 
     return (
         <div

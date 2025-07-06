@@ -56,6 +56,8 @@ export default class PhysicsEngine {
             const [idA, A] = entries[i];
             for (let j = i + 1; j < entries.length; j++) {
                 const [idB, B] = entries[j];
+                console.log(idA);
+                console.log(idB);
                 if (A.x < B.x + B.width && A.x + A.width > B.x && A.y < B.y + B.height && A.y + A.height > B.y) {
                     // overlap
                     const overlapX = Math.min(A.x + A.width, B.x + B.width) - Math.max(A.x, B.x);
