@@ -124,7 +124,7 @@ export default function About({ x, y, moveMode, onMove, className }) {
                         fontStyle: "italic",
                     }}
                 >
-                    Your Image Here
+                    Placeholder Image Here
                 </div>
             </section>
         </div>
