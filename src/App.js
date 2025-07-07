@@ -33,7 +33,7 @@ export default function App() {
 
     // Initialize physics and spawn centered IdCard using its own dim
     useEffect(() => {
-        const engine = new PhysicsEngine({friction: 0.999, restitution: 0.999});
+        const engine = new PhysicsEngine({friction: 0.995, restitution: 0.7});
         engineRef.current = engine;
 
         const {width: w0, height: h0} = ID_DIMENSIONS;
@@ -47,7 +47,8 @@ export default function App() {
             0,  // start static
             0,
             w0,
-            h0
+            h0,
+            100000
         );
 
         setBodiesList([
@@ -131,7 +132,8 @@ export default function App() {
             randomVelocity(),
             randomVelocity(),
             w3,
-            h3
+            h3,
+            .01
         );
         setBodiesList((l) => [...l, {id, type: "ball", width: w3, height: h3}]);
     };
