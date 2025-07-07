@@ -27,6 +27,7 @@ export default function App() {
     const [moveMode, setMoveMode] = useState(false);
     const [bodiesList, setBodiesList] = useState([]);
     const engineRef = useRef(null);
+    const allotedBalls = 100;
 
     // ±3px/frame initial velocity
     const randomVelocity = () => Math.random() * 6 - 3;
@@ -118,7 +119,7 @@ export default function App() {
 
     // Spawn Ball (max 25) with random color
     const spawnBall = () => {
-        if (bodiesList.filter(b => b.type === "ball").length >= 25) return;
+        if (bodiesList.filter(b => b.type === "ball").length >= allotedBalls) return;
         const headerH = $("nav").outerHeight(true) || 0;
         const {width: w3, height: h3} = BALL_DIMENSIONS;
         const id = `ball-${Date.now()}`;
@@ -197,7 +198,7 @@ export default function App() {
                         <button
                             type="button"
                             onClick={spawnBall}
-                            disabled={bodiesList.filter(b => b.type === "ball").length >= 25}
+                            disabled={bodiesList.filter(b => b.type === "ball").length >= allotedBalls}
                             style={{
                                 ...navLinkStyle,
                                 background: "transparent",
@@ -205,8 +206,8 @@ export default function App() {
                                 padding: 0,
                                 fontSize: "32px",
                                 display: moveMode ? "flex" : "none",
-                                opacity: bodiesList.filter(b => b.type === "ball").length < 25 ? 1 : 0.3,
-                                cursor: bodiesList.filter(b => b.type === "ball").length < 25 ? "pointer" : "not-allowed",
+                                opacity: bodiesList.filter(b => b.type === "ball").length < allotedBalls ? 1 : 0.3,
+                                cursor: bodiesList.filter(b => b.type === "ball").length < allotedBalls ? "pointer" : "not-allowed",
                             }}
                         >
                             <PiSpinnerBallDuotone />
