@@ -23,6 +23,9 @@ export default class PhysicsEngine {
         this.bodies = new Map();
         this.friction = friction;
         this.restitution = restitution;
+
+        // minimum per‐axis speed for very low‐mass bodies (your balls)
+        this.minBallSpeed = 0.5;
     }
 
     /**
@@ -59,9 +62,21 @@ export default class PhysicsEngine {
             // apply friction
             b.vx *= this.friction;
             b.vy *= this.friction;
+
+            // clamp a minimum speed for very low-mass bodies (balls)
+            if (b.mass <= 0.5) {
+                if (b.vx !== 0 && Math.abs(b.vx) < this.minBallSpeed) {
+                    b.vx = Math.sign(b.vx) * this.minBallSpeed;
+                }
+                if (b.vy !== 0 && Math.abs(b.vy) < this.minBallSpeed) {
+                    b.vy = Math.sign(b.vy) * this.minBallSpeed;
+                }
+            }
+
             // update positions
             b.x += b.vx;
             b.y += b.vy;
+
             // bounce off walls
             if (b.x <= 0) {
                 b.x = 0;

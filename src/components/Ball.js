@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 // Circular ball dimensions
-export const DIMENSIONS = { width: 45, height: 45 };
+export const DIMENSIONS = { width: 25, height: 25 };
 
 export default function Ball({ x, y, moveMode, onMove, className }) {
     const [spawned, setSpawned] = useState(false);
