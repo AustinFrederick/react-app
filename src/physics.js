@@ -25,7 +25,7 @@ export default class PhysicsEngine {
         this.restitution = restitution;
 
         // minimum per‐axis speed for very low‐mass bodies (your balls)
-        this.minBallSpeed = 0.5;
+        this.minBallSpeed = .75;
     }
 
     /**
@@ -80,19 +80,19 @@ export default class PhysicsEngine {
             // bounce off walls
             if (b.x <= 0) {
                 b.x = 0;
-                b.vx = -b.vx * this.restitution;
+                b.vx = -b.vx * this.restitution  + .8;
             }
             if (b.x + b.width >= screenW) {
                 b.x = screenW - b.width;
-                b.vx = -b.vx * this.restitution;
+                b.vx = -b.vx * this.restitution  - .8;
             }
             if (b.y <= 0) {
                 b.y = 0;
-                b.vy = -b.vy * this.restitution;
+                b.vy = -b.vy * this.restitution + .8;
             }
             if (b.y + b.height >= screenH) {
                 b.y = screenH - b.height;
-                b.vy = -b.vy * this.restitution;
+                b.vy = -b.vy * this.restitution - .8;
             }
         });
 

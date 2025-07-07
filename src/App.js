@@ -27,7 +27,7 @@ export default function App() {
     const [moveMode, setMoveMode] = useState(false);
     const [bodiesList, setBodiesList] = useState([]);
     const engineRef = useRef(null);
-    const allotedBalls = 100;
+    const allotedBalls = 40;
 
     // ±3px/frame initial velocity
     const randomVelocity = () => Math.random() * 6 - 3;
@@ -120,7 +120,7 @@ export default function App() {
 
     const spawnBall = () => {
         const existingCount = bodiesList.filter(b => b.type === "ball").length;
-        const maxToSpawn   = 5; // how many per click
+        const maxToSpawn   = allotedBalls; // how many per click
         const spaceLeft    = allotedBalls - existingCount;
         const countToSpawn = Math.min(maxToSpawn, spaceLeft);
 
