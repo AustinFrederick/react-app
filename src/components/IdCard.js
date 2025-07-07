@@ -269,7 +269,7 @@ export default function IdCard({
                         >
                             {[
                                 {label: "Email", value: "Freddy@AustinFrederick.com"},
-                                {label: "Phone", value: "(xxx) xxx xxxx"},
+                                // {label: "Phone", value: "(xxx) xxx xxxx"},
                                 {label: "Location", value: "Denver, Colorado"},
                             ].map(({label, value}) => (
                                 <div

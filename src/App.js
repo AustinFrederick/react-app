@@ -7,9 +7,10 @@ import Projects from "./Projects";
 import Resume, {DIMENSIONS as RESUME_DIMENSIONS} from "./components/Resume";
 import About, {DIMENSIONS as ABOUT_DIMENSIONS} from "./components/About";
 import IdCard, {DIMENSIONS as ID_DIMENSIONS} from "./components/IdCard";
+import Ball, {DIMENSIONS as BALL_DIMENSIONS} from "./components/Ball";
 import { isMobile } from 'react-device-detect';
-
 import PhysicsEngine from "./physics";
+import {PiSpinnerBallDuotone} from "react-icons/pi";
 
 // Nav link styling
 const navLinkStyle = {
@@ -32,7 +33,7 @@ export default function App() {
 
     // Initialize physics and spawn centered IdCard using its own dim
     useEffect(() => {
-        const engine = new PhysicsEngine({friction: 0.98, restitution: 0.7});
+        const engine = new PhysicsEngine({friction: 0.999, restitution: 0.999});
         engineRef.current = engine;
 
         const {width: w0, height: h0} = ID_DIMENSIONS;
@@ -60,7 +61,7 @@ export default function App() {
             const screenH = footerEl
                 ? footerEl.getBoundingClientRect().top
                 : window.innerHeight;
-            engine.step(window.innerWidth, screenH-71);
+            engine.step(window.innerWidth, screenH - 71);
             setBodiesList((list) => [...list]);
             raf = requestAnimationFrame(loop);
         };
@@ -114,6 +115,27 @@ export default function App() {
         setBodiesList((l) => [...l, {id: "resume", type: "resume", width: w2, height: h2}]);
     };
 
+    // Spawn Ball (max 25) with random color
+    const spawnBall = () => {
+        if (bodiesList.filter(b => b.type === "ball").length >= 25) return;
+        const headerH = $("nav").outerHeight(true) || 0;
+        const {width: w3, height: h3} = BALL_DIMENSIONS;
+        const id = `ball-${Date.now()}`;
+        const x3 = Math.random() * (window.innerWidth - w3 - 40) + 20;
+        const y3 = headerH + 20 + Math.random() * 100;
+
+        engineRef.current.addBody(
+            id,
+            x3,
+            y3,
+            randomVelocity(),
+            randomVelocity(),
+            w3,
+            h3
+        );
+        setBodiesList((l) => [...l, {id, type: "ball", width: w3, height: h3}]);
+    };
+
     // Clear and stop move mode
     const handleReset = useCallback(() => {
         engineRef.current.bodies.clear();
@@ -124,22 +146,17 @@ export default function App() {
         setBodiesList([{ id: "idCard", type: "idCard", width, height }]);
         setMoveMode(false);
         setResetCounter(c => c + 1);
-    }, [/* no-changing dependencies: engineRef, ID_DIMENSIONS, setBodiesList, setMoveMode, setResetCounter */]);
-
+    }, []);
 
     const handleSet = () => setMoveMode(false);
+
     // Reset on window resize
     useEffect(() => {
-        const onResize = () => {
-            // re‐center ID and clear others whenever the window size changes
-            handleReset();
-        };
-
+        const onResize = () => handleReset();
         window.addEventListener("resize", onResize);
-        return () => {
-            window.removeEventListener("resize", onResize);
-        };
+        return () => window.removeEventListener("resize", onResize);
     }, [handleReset]);
+
     return (
         <Router>
             <div style={{minHeight: "100vh", display: "flex", flexDirection: "column"}}>
@@ -157,35 +174,45 @@ export default function App() {
                     height: "71px",
                     userSelect: "none",
                 }}>
-                    <button
-                        type="button"
-                        onClick={spawnAbout}
-                        style={{
-                            ...navLinkStyle,
-                            background: "transparent",
-                            border: "none",
-                            padding: 0,
-                        }}
-                    >
+                   {/* <button type="button" onClick={spawnAbout} style={{
+                        ...navLinkStyle, background: "transparent", border: "none", padding: 0
+                    }}>
                         About
                     </button>
 
-                    <button
-                        type="button"
-                        onClick={spawnResume}
-                        style={{
-                            ...navLinkStyle,
-                            background: "transparent",
-                            border: "1px solid white",
-                            padding: "0.5rem 1rem",
-                            borderRadius: "4px",
-                        }}
-                    >
+                    <button type="button" onClick={spawnResume} style={{
+                        ...navLinkStyle,
+                        background: "transparent",
+                        border: "1px solid white",
+                        padding: "0.5rem 1rem",
+                        borderRadius: "4px",
+                    }}>
                         Resume
-                    </button>
+                    </button>*/}
+
+                    {/* only show Ball spawner when moveMode is true */}
+                    {moveMode && (
+                        <button
+                            type="button"
+                            onClick={spawnBall}
+                            disabled={bodiesList.filter(b => b.type === "ball").length >= 25}
+                            style={{
+                                ...navLinkStyle,
+                                background: "transparent",
+                                border: "none",
+                                padding: 0,
+                                fontSize: "32px",
+                                display: moveMode ? "flex" : "none",
+                                opacity: bodiesList.filter(b => b.type === "ball").length < 25 ? 1 : 0.3,
+                                cursor: bodiesList.filter(b => b.type === "ball").length < 25 ? "pointer" : "not-allowed",
+                            }}
+                        >
+                            <PiSpinnerBallDuotone />
+                        </button>
+                    )}
                 </nav>
 
-                <main style={{flexGrow: 1, position: "relative", userSelect: "none",}}>
+                <main style={{flexGrow: 1, position: "relative", userSelect: "none"}}>
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/projects" element={<Projects/>}/>
@@ -196,7 +223,6 @@ export default function App() {
                         const body = engineRef.current.bodies.get(id);
                         if (!body) return null;
                         const common = {
-                            // key: id,
                             x: body.x,
                             y: body.y,
                             moveMode,
@@ -218,8 +244,9 @@ export default function App() {
                                 />
                             );
                         }
-                        if (type === "about") return <About {...common} width={width} height={height}/>;
-                        if (type === "resume") return <Resume {...common} width={width} height={height}/>;
+                        if (type === "about") return <About key={id} {...common} width={width} height={height}/>;
+                        if (type === "resume") return <Resume key={id} {...common} width={width} height={height}/>;
+                        if (type === "ball") return <Ball key={id} {...common} className="spawned-ball" />;
                         return null;
                     })}
                 </main>
