@@ -1,31 +1,36 @@
 // src/components/Ball.js
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 // Circular ball dimensions
 export const DIMENSIONS = { width: 45, height: 45 };
 
 export default function Ball({ x, y, moveMode, onMove, className }) {
+    const [spawned, setSpawned] = useState(false);
     const dragging = useRef(false);
     const dragOffset = useRef({ x: 0, y: 0 });
     const lastPos = useRef({ x: 0, y: 0 });
 
+    // trigger spawn animation on mount
+    useEffect(() => {
+        requestAnimationFrame(() => setSpawned(true));
+    }, []);
+
+    // start drag, capture grab‐point
     const handleMouseDown = (e) => {
         if (!moveMode) return;
         dragging.current = true;
-        // capture where on the ball the user clicked
         dragOffset.current = { x: e.clientX - x, y: e.clientY - y };
         lastPos.current = { x: e.clientX, y: e.clientY };
         e.preventDefault();
     };
 
+    // drag & drop
     useEffect(() => {
         if (!moveMode) return;
         const handleMouseMove = (e) => {
             if (!dragging.current) return;
-            // compute new top-left so the grab point stays under cursor
             const rawX = e.clientX - dragOffset.current.x;
             const rawY = e.clientY - dragOffset.current.y;
-            // delta for velocity
             const vx = e.clientX - lastPos.current.x;
             const vy = e.clientY - lastPos.current.y;
             onMove(rawX, rawY, vx, vy);
@@ -43,16 +48,16 @@ export default function Ball({ x, y, moveMode, onMove, className }) {
         };
     }, [moveMode, x, y, onMove]);
 
-    // Generate a random shade of grey or a blue hue once
+    // random grey/blue color
     const color = React.useMemo(() => {
         if (Math.random() < 0.3) {
-            const lightness = Math.floor(Math.random() * 20 + 70);
-            return `hsl(0, 0%, ${lightness}%)`;
+            const l = Math.floor(Math.random() * 20 + 70);
+            return `hsl(0,0%,${l}%)`;
         } else {
             const hue = 216;
-            const saturation = Math.floor(Math.random() * 40 + 60);
-            const lightness = Math.floor(Math.random() * 20 + 40);
-            return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+            const s = Math.floor(Math.random() * 40 + 60);
+            const l = Math.floor(Math.random() * 20 + 40);
+            return `hsl(${hue},${s}%,${l}%)`;
         }
     }, []);
 
@@ -68,6 +73,10 @@ export default function Ball({ x, y, moveMode, onMove, className }) {
         cursor: moveMode ? "grab" : "pointer",
         zIndex: 15,
         userSelect: "none",
+        // spawn animation:
+        transform: spawned ? "scale(1)" : "scale(0.5)",
+        opacity: spawned ? 1 : 0,
+        transition: "transform 300ms ease, opacity 300ms ease",
     };
 
     return (
