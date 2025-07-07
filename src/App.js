@@ -117,26 +117,40 @@ export default function App() {
         setBodiesList((l) => [...l, {id: "resume", type: "resume", width: w2, height: h2}]);
     };
 
-    // Spawn Ball (max 25) with random color
-    const spawnBall = () => {
-        if (bodiesList.filter(b => b.type === "ball").length >= allotedBalls) return;
-        const headerH = $("nav").outerHeight(true) || 0;
-        const {width: w3, height: h3} = BALL_DIMENSIONS;
-        const id = `ball-${Date.now()}`;
-        const x3 = Math.random() * (window.innerWidth - w3 - 40) + 20;
-        const y3 = headerH + 20 + Math.random() * 100;
 
-        engineRef.current.addBody(
-            id,
-            x3,
-            y3,
-            randomVelocity(),
-            randomVelocity(),
-            w3,
-            h3,
-            .01
-        );
-        setBodiesList((l) => [...l, {id, type: "ball", width: w3, height: h3}]);
+    const spawnBall = () => {
+        const existingCount = bodiesList.filter(b => b.type === "ball").length;
+        const maxToSpawn   = 5; // how many per click
+        const spaceLeft    = allotedBalls - existingCount;
+        const countToSpawn = Math.min(maxToSpawn, spaceLeft);
+
+        if (countToSpawn <= 0) return;
+
+        const headerH = $("nav").outerHeight(true) || 0;
+        const { width: w3, height: h3 } = BALL_DIMENSIONS;
+
+        const newBalls = [];
+
+        for (let i = 0; i < countToSpawn; i++) {
+            const id = `ball-${Date.now()}-${i}`;
+            const x3 = Math.random() * (window.innerWidth - w3 - 40) + 20;
+            const y3 = headerH + 20 + Math.random() * 100;
+
+            engineRef.current.addBody(
+                id,
+                x3,
+                y3,
+                randomVelocity(),
+                randomVelocity(),
+                w3,
+                h3,
+                0.01
+            );
+
+            newBalls.push({ id, type: "ball", width: w3, height: h3 });
+        }
+
+        setBodiesList((l) => [...l, ...newBalls]);
     };
 
     // Clear and stop move mode
