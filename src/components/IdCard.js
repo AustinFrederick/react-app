@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import myPhoto from "../20220730_171112_cr.jpg";
 import FlippingPhrase from "./FlippingPhrase";
-import {  FaArrowsAlt, FaCheck, FaUndo,FaRegCopy } from "react-icons/fa";
+import {  FaArrowsAlt, FaCheck, FaUndo  } from "react-icons/fa";
 import {isMobile} from "react-device-detect";
 // Card dimensions
 const cardWidth = 350;
@@ -23,7 +23,7 @@ export default function IdCard({
                                }) {
     const [flipped, setFlipped] = useState(false);
     const [spawned, setSpawned] = useState(false);
-    const [copiedField, setCopiedField] = useState(null);
+    // const [copiedField, setCopiedField] = useState(null);
     useEffect(() => {
         // trigger the animation on mount
         setSpawned(true);
@@ -50,11 +50,11 @@ export default function IdCard({
         };
     };
 
-    const handleCopy = (label, value) => {
+   /* const handleCopy = (label, value) => {
         navigator.clipboard.writeText(value);
         setCopiedField(label);
         setTimeout(() => setCopiedField(null), 2000);
-    };
+    };*/
     // Mouse/touch drag handlers
  /*   const handleMouseDown = (e) => {
         if (!moveMode) return;
@@ -174,7 +174,7 @@ export default function IdCard({
         borderRadius: "8px",
         backgroundColor: "white",
         color: "#555",
-        fontSize: "1rem",
+        fontSize: "1.25rem",
         cursor: "pointer",
         display:  !isMobile ? "flex" : "none",
         alignItems: "center",
@@ -247,7 +247,13 @@ export default function IdCard({
                     </div>
                     {/* Back face */}
                     <div style={backFaceStyle}>
-                        <div style={{display: "flex", gap: "1rem", marginBottom: "1rem", top:"60px", position:"relative"}}>
+                        <div style={{
+                            display: "flex",
+                            gap: "1rem",
+                            marginBottom: "1rem",
+                            top: "60px",
+                            position: "relative"
+                        }}>
                             <button onClick={() => setMoveMode(true)} style={buttonStyle} aria-pressed={moveMode}>
                                 <FaArrowsAlt/>
                             </button>
@@ -259,9 +265,26 @@ export default function IdCard({
                         <div
                             style={{
                                 position: "relative",
-                                top: 100,
+                                top: 150,
                                 padding: "0 1rem",
                                 display: "flex",
+                                flexDirection: "column",
+                                gap: "0.5rem",
+                                width: "100%",
+                                color: "#ccc",
+                                fontSize: "0.95rem",
+                                textAlign: "center",
+                            }}
+                        >
+                            <span style={{fontWeight: 400}}>AustinFrederick.com</span>
+                            <span style={{fontWeight: 400}}>Denver, Colorado</span>
+                        </div>
+                        {/* <div
+                            style={{
+                                position: "relative",
+                                top: 100,
+                                padding: "0 1rem",
+                                display: "none",
                                 flexDirection: "column",
                                 gap: "0.75rem",
                                 width:"100%"
@@ -287,7 +310,7 @@ export default function IdCard({
                                     <strong style={{marginRight: "0.5rem"}}>{label}:</strong>
                                     <span style={{fontWeight: 400}}>{value}</span>
                                   </span>
-                                    {/* Only Email & Phone get a copy icon */}
+                                     Only Email & Phone get a copy icon
                                     {label !== "Location" && (
                                         copiedField === label ? (
                                             <span style={{ fontSize: "0.75rem", color: "#ccc",marginLeft: "10px" }}>Copied!</span>
@@ -301,7 +324,7 @@ export default function IdCard({
                                     )}
                                 </div>
                             ))}
-                        </div>
+                        </div>*/}
                     </div>
                 </div>
             </div>
