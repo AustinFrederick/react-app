@@ -10,7 +10,7 @@ import IdCard, {DIMENSIONS as ID_DIMENSIONS} from "./components/IdCard";
 import Ball, {DIMENSIONS as BALL_DIMENSIONS} from "./components/Ball";
 import { isMobile } from 'react-device-detect';
 import PhysicsEngine from "./physics";
-import {PiSpinnerBallDuotone} from "react-icons/pi";
+import {GiPartyHat} from "react-icons/gi";
 
 // Nav link styling
 const navLinkStyle = {
@@ -29,7 +29,6 @@ export default function App() {
     const engineRef = useRef(null);
     const allowedBalls = 40;
     const spawnTimers = useRef([]);
-    // ±3px/frame initial velocity
     const randomVelocity = () => Math.random() * 30 - 3;
 
     // Initialize physics and spawn centered IdCard using its own dim
@@ -74,7 +73,7 @@ export default function App() {
     // Update physics on manual drag
     const handleDrag = useCallback((id, x, y, vx, vy) => {
         const b = engineRef.current.bodies.get(id);
-        engineRef.current.addBody(id, x, y, vx, vy, b.width, b.height);
+        engineRef.current.addBody(id, x, y, vx, vy, b.width, b.height,b.mass);
     }, []);
 
     // Spawn About card with its own dim
@@ -226,10 +225,10 @@ export default function App() {
                                 fontSize: "32px",
                                 display: moveMode ? "flex" : "none",
                                 opacity: bodiesList.filter(b => b.type === "ball").length < 1 ? 1 : 0.3,//accepts allowedBalls instead of "1"
-                                cursor: bodiesList.filter(b => b.type === "ball").length < 1 ? "pointer" : "not-allowed",//accepts allowedBalls instead of "1"
+                                cursor: bodiesList.filter(b => b.type === "ball").length < 1 ? "pointer" : "default",//accepts allowedBalls instead of "1"
                             }}
                         >
-                            <PiSpinnerBallDuotone />
+                            <GiPartyHat />
                         </button>
                     )}
                 </nav>

@@ -87,8 +87,11 @@ export default function IdCard({
             const rawY = e.clientY - dragOffset.current.y;
             const { x: bx, y: by } = getBoundedPosition(rawX, rawY);
             // compute velocity
-            const vx = e.clientX - lastPos.current.x;
-            const vy = e.clientY - lastPos.current.y;
+            let vx = e.clientX - lastPos.current.x;
+            let vy = e.clientY - lastPos.current.y;
+            if(Math.abs(e.clientX- lastPos.current.x)<.005 || Math.abs(e.clientY- lastPos.current.y)<.005){
+                vx = vy =0;
+            }
             onMove(bx, by, vx, vy);
             lastPos.current = { x: e.clientX, y: e.clientY };
         };

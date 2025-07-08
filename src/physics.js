@@ -29,7 +29,7 @@ export default class PhysicsEngine {
     }
 
     /**
-     * Add or update a body in simulation.
+     * Add or updates a body in simulation.
      * @param {string} id       - unique identifier
      * @param {number} x        - x position
      * @param {number} y        - y position
@@ -57,7 +57,7 @@ export default class PhysicsEngine {
      * @param {number} screenH - viewport height (e.g. top of footer)
      */
     step(screenW, screenH) {
-        // 1) Move & wall collisions
+        // ----------------Move & wall collisions
         this.bodies.forEach(b => {
             // apply friction
             b.vx *= this.friction;
@@ -96,7 +96,7 @@ export default class PhysicsEngine {
             }
         });
 
-        // 2) Body-body collisions
+        // ----------------Body-body collisions
         const entries = Array.from(this.bodies.entries());
         for (let i = 0; i < entries.length; i++) {
             const [ , A ] = entries[i];
