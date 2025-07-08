@@ -50,7 +50,11 @@ export default function Ball({ x, y, moveMode, onMove, className }) {
 
     // random grey/blue color
     const color = React.useMemo(() => {
-        if (Math.random() < 0.3) {
+        const hue = 216;
+        const s = Math.floor(Math.random() * 40 + 60);
+        const l = Math.floor(Math.random() * 20 + 40);
+        return `hsl(${hue},${s}%,${l}%)`;
+       /* if (Math.random() < 0.3) {
             const l = Math.floor(Math.random() * 20 + 70);
             return `hsl(0,0%,${l}%)`;
         } else {
@@ -58,7 +62,7 @@ export default function Ball({ x, y, moveMode, onMove, className }) {
             const s = Math.floor(Math.random() * 40 + 60);
             const l = Math.floor(Math.random() * 20 + 40);
             return `hsl(${hue},${s}%,${l}%)`;
-        }
+        }*/
     }, []);
 
     const style = {

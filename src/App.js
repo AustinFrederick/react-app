@@ -27,7 +27,7 @@ export default function App() {
     const [moveMode, setMoveMode] = useState(false);
     const [bodiesList, setBodiesList] = useState([]);
     const engineRef = useRef(null);
-    const allotedBalls = 40;
+    const allowedBalls = 40;
 
     // ±3px/frame initial velocity
     const randomVelocity = () => Math.random() * 6 - 3;
@@ -49,7 +49,7 @@ export default function App() {
             0,
             w0,
             h0,
-            100000
+            1
         );
 
         setBodiesList([
@@ -119,39 +119,41 @@ export default function App() {
 
 
     const spawnBall = () => {
-        const existingCount = bodiesList.filter(b => b.type === "ball").length;
-        const maxToSpawn   = allotedBalls; // how many per click
-        const spaceLeft    = allotedBalls - existingCount;
-        const countToSpawn = Math.min(maxToSpawn, spaceLeft);
-
-        if (countToSpawn <= 0) return;
+        const existing = bodiesList.filter(b => b.type === "ball").length;
+        const spaceLeft = allowedBalls - existing;    // how many more we can add
+        if (spaceLeft <= 0) return;
 
         const headerH = $("nav").outerHeight(true) || 0;
         const { width: w3, height: h3 } = BALL_DIMENSIONS;
 
-        const newBalls = [];
+        for (let i = 0; i < spaceLeft; i++) {
+            // stagger each spawn by 200ms
+            setTimeout(() => {
+                const id = `ball-${Date.now()}-${i}`;
+                const x3 = Math.random() * (window.innerWidth - w3 - 40) + 20;
+                const y3 = headerH + (window.innerHeight) + Math.random() * 100;
 
-        for (let i = 0; i < countToSpawn; i++) {
-            const id = `ball-${Date.now()}-${i}`;
-            const x3 = Math.random() * (window.innerWidth - w3 - 40) + 20;
-            const y3 = headerH + 20 + Math.random() * 100;
+                // add to physics
+                engineRef.current.addBody(
+                    id,
+                    x3,
+                    y3,
+                    randomVelocity(),
+                    randomVelocity(),
+                    w3,
+                    h3,
+                    0.01
+                );
 
-            engineRef.current.addBody(
-                id,
-                x3,
-                y3,
-                randomVelocity(),
-                randomVelocity(),
-                w3,
-                h3,
-                0.01
-            );
-
-            newBalls.push({ id, type: "ball", width: w3, height: h3 });
+                // reflect in React state
+                setBodiesList((prev) => [
+                    ...prev,
+                    { id, type: "ball", width: w3, height: h3 },
+                ]);
+            }, i * 200);
         }
-
-        setBodiesList((l) => [...l, ...newBalls]);
     };
+
 
     // Clear and stop move mode
     const handleReset = useCallback(() => {
@@ -212,7 +214,7 @@ export default function App() {
                         <button
                             type="button"
                             onClick={spawnBall}
-                            disabled={bodiesList.filter(b => b.type === "ball").length >= allotedBalls}
+                            disabled={bodiesList.filter(b => b.type === "ball").length >= allowedBalls}
                             style={{
                                 ...navLinkStyle,
                                 background: "transparent",
@@ -220,8 +222,8 @@ export default function App() {
                                 padding: 0,
                                 fontSize: "32px",
                                 display: moveMode ? "flex" : "none",
-                                opacity: bodiesList.filter(b => b.type === "ball").length < allotedBalls ? 1 : 0.3,
-                                cursor: bodiesList.filter(b => b.type === "ball").length < allotedBalls ? "pointer" : "not-allowed",
+                                opacity: bodiesList.filter(b => b.type === "ball").length < allowedBalls ? 1 : 0.3,
+                                cursor: bodiesList.filter(b => b.type === "ball").length < allowedBalls ? "pointer" : "not-allowed",
                             }}
                         >
                             <PiSpinnerBallDuotone />

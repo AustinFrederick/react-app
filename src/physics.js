@@ -80,19 +80,19 @@ export default class PhysicsEngine {
             // bounce off walls
             if (b.x <= 0) {
                 b.x = 0;
-                b.vx = -b.vx * this.restitution  + .8;
+                b.vx = -b.vx * this.restitution  + 2;
             }
             if (b.x + b.width >= screenW) {
                 b.x = screenW - b.width;
-                b.vx = -b.vx * this.restitution  - .8;
+                b.vx = -b.vx * this.restitution  - 2;
             }
             if (b.y <= 0) {
                 b.y = 0;
-                b.vy = -b.vy * this.restitution + .8;
+                b.vy = -b.vy * this.restitution + 2;
             }
             if (b.y + b.height >= screenH) {
                 b.y = screenH - b.height;
-                b.vy = -b.vy * this.restitution - .8;
+                b.vy = -b.vy * this.restitution - 2;
             }
         });
 

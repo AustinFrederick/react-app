@@ -37,9 +37,9 @@ export default function IdCard({
 
     // Clamp top-left x/y within viewport bounds
     const getBoundedPosition = (nx, ny) => {
-        const xPadding = 20;
-        const yPosPadding = 65;
-        const yNegPadding = 145;
+        const xPadding = 5;
+        const yPosPadding = 5;
+        const yNegPadding = 130;
         const minX = xPadding;
         const maxX = window.innerWidth - cardWidth - xPadding;
         const minY = yPosPadding;
