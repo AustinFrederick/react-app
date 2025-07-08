@@ -28,9 +28,9 @@ export default function App() {
     const [bodiesList, setBodiesList] = useState([]);
     const engineRef = useRef(null);
     const allowedBalls = 40;
-
+    const spawnTimers = useRef([]);
     // ±3px/frame initial velocity
-    const randomVelocity = () => Math.random() * 6 - 3;
+    const randomVelocity = () => Math.random() * 30 - 3;
 
     // Initialize physics and spawn centered IdCard using its own dim
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function App() {
             0,
             w0,
             h0,
-            1
+            9999999
         );
 
         setBodiesList([
@@ -128,7 +128,7 @@ export default function App() {
 
         for (let i = 0; i < spaceLeft; i++) {
             // stagger each spawn by 200ms
-            setTimeout(() => {
+            const timer = setTimeout(() => {
                 const id = `ball-${Date.now()}-${i}`;
                 const x3 = Math.random() * (window.innerWidth - w3 - 40) + 20;
                 const y3 = headerH + (window.innerHeight) + Math.random() * 100;
@@ -151,6 +151,7 @@ export default function App() {
                     { id, type: "ball", width: w3, height: h3 },
                 ]);
             }, i * 200);
+            spawnTimers.current.push(timer);
         }
     };
 
@@ -158,6 +159,8 @@ export default function App() {
     // Clear and stop move mode
     const handleReset = useCallback(() => {
         engineRef.current.bodies.clear();
+        spawnTimers.current.forEach(clearTimeout);
+        spawnTimers.current = [];
         const { width, height } = ID_DIMENSIONS;
         const centerX = window.innerWidth/2 - width/2;
         const centerY = window.innerHeight/2 - height/2;
@@ -214,7 +217,7 @@ export default function App() {
                         <button
                             type="button"
                             onClick={spawnBall}
-                            disabled={bodiesList.filter(b => b.type === "ball").length >= allowedBalls}
+                            disabled={bodiesList.filter(b => b.type === "ball").length >= 1 } //accepts allowedBalls instead of "1", but with how the balls spawn right now the user could technically spawn more than allowedBalls soo...
                             style={{
                                 ...navLinkStyle,
                                 background: "transparent",
@@ -222,8 +225,8 @@ export default function App() {
                                 padding: 0,
                                 fontSize: "32px",
                                 display: moveMode ? "flex" : "none",
-                                opacity: bodiesList.filter(b => b.type === "ball").length < allowedBalls ? 1 : 0.3,
-                                cursor: bodiesList.filter(b => b.type === "ball").length < allowedBalls ? "pointer" : "not-allowed",
+                                opacity: bodiesList.filter(b => b.type === "ball").length < 1 ? 1 : 0.3,//accepts allowedBalls instead of "1"
+                                cursor: bodiesList.filter(b => b.type === "ball").length < 1 ? "pointer" : "not-allowed",//accepts allowedBalls instead of "1"
                             }}
                         >
                             <PiSpinnerBallDuotone />

@@ -18,8 +18,8 @@ export default function IdCard({
                                    setMoveMode,
                                    onReset,
                                    onSet,
-                                   spawnAbout,
-                                   spawnResume,
+                                   /*spawnAbout,
+                                   spawnResume,*/
                                }) {
     const [flipped, setFlipped] = useState(false);
     const [spawned, setSpawned] = useState(false);
@@ -116,7 +116,7 @@ export default function IdCard({
         top: y,
         width: cardWidth,
         height: cardHeight,
-        cursor: moveMode ? "grab" : "pointer",
+        cursor: moveMode ? "grab" : "default",
         perspective: "1000px",
         border: borderStyle,
         borderRadius: 20,

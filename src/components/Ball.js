@@ -74,7 +74,7 @@ export default function Ball({ x, y, moveMode, onMove, className }) {
         borderRadius: "50%",
         background: `radial-gradient(circle at 30% 30%, ${color}, #000)`,
         boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-        cursor: moveMode ? "grab" : "pointer",
+        cursor: moveMode ? "grab" : "default",
         zIndex: 15,
         userSelect: "none",
         // spawn animation:
