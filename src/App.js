@@ -28,7 +28,7 @@ export default function App() {
     const [moveMode, setMoveMode] = useState(false);
     const [bodiesList, setBodiesList] = useState([]);
     const engineRef = useRef(null);
-    const allowedBalls = 5;
+    const allowedBalls = 40;
     const spawnTimers = useRef([]);
 
     const randomVelocity = () => Math.random() * 6 - 3;
@@ -42,6 +42,11 @@ export default function App() {
     const handleHoleMove = useCallback((x, y) => {
         setHolePos({ x, y });
     }, []);
+    // when drag ends: if dropped over nav, remove hole
+    const handleHoleRelease = useCallback((x, y) => {
+        const navH = $("nav").outerHeight(true) || 0;
+        if (y < navH) setHolePos(null);
+    }, []);
 
     // Gravity-well state
     const [wellPos, setWellPos] = useState(null);
@@ -51,6 +56,11 @@ export default function App() {
     }, [wellPos]);
     const handleWellMove = useCallback((x, y) => {
         setWellPos({ x, y });
+    }, []);
+    // when drag ends: if dropped over nav, remove well
+    const handleWellRelease = useCallback((x, y) => {
+        const navH = $("nav").outerHeight(true) || 0;
+        if (y < navH) setWellPos(null);
     }, []);
 
     // initialize physics once
@@ -101,9 +111,9 @@ export default function App() {
                     const cy = well.y + WELL_DIMENSIONS.height / 2;
                     const dx = cx - (b.x + b.width / 2);
                     const dy = cy - (b.y + b.height / 2);
-                    const dist = Math.hypot(dx, dy) +50;
+                    const dist = Math.hypot(dx, dy) + 5;
                     if (dist > 0) {
-                        const force = 900000000000000 / (dist * dist);
+                        const force = 3000 / (dist * dist);
                         b.vx += (dx / dist) * force;
                         b.vy += (dy / dist) * force;
                     }
@@ -246,10 +256,20 @@ export default function App() {
         <Router>
             <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
                 {holePos && (
-                    <BlackHole x={holePos.x} y={holePos.y} onMove={handleHoleMove} />
+                    <BlackHole
+                        x={holePos.x}
+                        y={holePos.y}
+                        onMove={handleHoleMove}
+                        onRelease={handleHoleRelease}
+                    />
                 )}
                 {wellPos && (
-                    <GravityWell x={wellPos.x} y={wellPos.y} onMove={handleWellMove} />
+                    <GravityWell
+                        x={wellPos.x}
+                        y={wellPos.y}
+                        onMove={handleWellMove}
+                        onRelease={handleWellRelease}
+                    />
                 )}
 
                 <nav

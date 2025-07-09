@@ -1,17 +1,16 @@
 // src/components/BlackHole.js
 import React, { useRef, useEffect, useState } from "react";
-import {GiHole} from "react-icons/gi";
+import { GiHole } from "react-icons/gi";
 
 export const DIMENSIONS = { width: 100, height: 100 };
 
-export default function BlackHole({ x, y, onMove }) {
+export default function BlackHole({ x, y, onMove, onRelease }) {
     const [spawned, setSpawned] = useState(false);
     const dragging = useRef(false);
     const dragOffset = useRef({ x: 0, y: 0 });
     const lastPos = useRef({ x: 0, y: 0 });
 
     useEffect(() => {
-        // simple “pop” animation on mount
         requestAnimationFrame(() => setSpawned(true));
     }, []);
 
@@ -25,14 +24,18 @@ export default function BlackHole({ x, y, onMove }) {
     useEffect(() => {
         const handleMouseMove = (e) => {
             if (!dragging.current) return;
-            const rawX = e.clientX - dragOffset.current.x;
-            const rawY = e.clientY - dragOffset.current.y;
-            /*const vx = e.clientX - lastPos.current.x;
-            const vy = e.clientY - lastPos.current.y;*/
-            onMove(rawX, rawY);            // only position matters
+            const newX = e.clientX - dragOffset.current.x;
+            const newY = e.clientY - dragOffset.current.y;
+            onMove(newX, newY);
             lastPos.current = { x: e.clientX, y: e.clientY };
         };
-        const handleMouseUp = () => {
+        const handleMouseUp = (e) => {
+            if (dragging.current) {
+                // compute final drop position
+                const dropX = e.clientX - dragOffset.current.x;
+                const dropY = e.clientY - dragOffset.current.y;
+                onRelease && onRelease(dropX, dropY);
+            }
             dragging.current = false;
         };
         window.addEventListener("mousemove", handleMouseMove);
@@ -41,7 +44,7 @@ export default function BlackHole({ x, y, onMove }) {
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [x, y, onMove]);
+    }, [x, y, onMove, onRelease]);
 
     return (
         <div
@@ -50,29 +53,22 @@ export default function BlackHole({ x, y, onMove }) {
                 position: "absolute",
                 left: x,
                 top: y,
-                width: 40,            // make it square
-                height: 40,
-                display: "flex",       // center the icon
+                width: DIMENSIONS.width,
+                height: DIMENSIONS.height,
+                display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 80,          // control icon size
-                borderRadius: "50%",   // still keep circular hit area
-                background: "radial-gradient(circle at 50% 50%, #000, #111)",
-                boxShadow: "0 0 60px 20px rgba(0,0,0,0.2)",
-                pointerEvents: "auto",
-                transform: spawned
-                    ? "scale(1)"
-                    : "scale(0.5)",
+                fontSize: 80,
+                borderRadius: "50%",
+                transform: spawned ? "scale(1) rotate(180deg)" : "scale(0.5) rotate(180deg)",
                 opacity: spawned ? 1 : 0,
                 transition: "transform 300ms ease, opacity 300ms ease",
                 zIndex: 100,
                 cursor: "grab",
                 userSelect: "none",
-                color:"#1e1e1e"
             }}
         >
-            <GiHole style={{width: "80%", height: "80%"}}/>
+            <GiHole style={{ width: "80%", height: "80%" }} />
         </div>
-
     );
 }

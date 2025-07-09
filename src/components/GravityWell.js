@@ -1,16 +1,16 @@
+// src/components/GravityWell.js
 import React, { useRef, useEffect, useState } from "react";
 import { GiJupiter } from "react-icons/gi";
 
 export const DIMENSIONS = { width: 100, height: 100 };
 
-export default function GravityWell({ x, y, onMove }) {
+export default function GravityWell({ x, y, onMove, onRelease }) {
     const [spawned, setSpawned] = useState(false);
     const dragging = useRef(false);
     const dragOffset = useRef({ x: 0, y: 0 });
     const lastPos = useRef({ x: 0, y: 0 });
 
     useEffect(() => {
-        // “pop” animation
         requestAnimationFrame(() => setSpawned(true));
     }, []);
 
@@ -22,23 +22,28 @@ export default function GravityWell({ x, y, onMove }) {
     };
 
     useEffect(() => {
-        const onMouseMove = (e) => {
+        const handleMouseMove = (e) => {
             if (!dragging.current) return;
-            const rawX = e.clientX - dragOffset.current.x;
-            const rawY = e.clientY - dragOffset.current.y;
-            onMove(rawX, rawY);
+            const newX = e.clientX - dragOffset.current.x;
+            const newY = e.clientY - dragOffset.current.y;
+            onMove(newX, newY);
             lastPos.current = { x: e.clientX, y: e.clientY };
         };
-        const onMouseUp = () => {
+        const handleMouseUp = (e) => {
+            if (dragging.current) {
+                const dropX = e.clientX - dragOffset.current.x;
+                const dropY = e.clientY - dragOffset.current.y;
+                onRelease && onRelease(dropX, dropY);
+            }
             dragging.current = false;
         };
-        window.addEventListener("mousemove", onMouseMove);
-        window.addEventListener("mouseup", onMouseUp);
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
         return () => {
-            window.removeEventListener("mousemove", onMouseMove);
-            window.removeEventListener("mouseup", onMouseUp);
+            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [x, y, onMove]);
+    }, [x, y, onMove, onRelease]);
 
     return (
         <div
@@ -54,14 +59,13 @@ export default function GravityWell({ x, y, onMove }) {
                 justifyContent: "center",
                 fontSize: 80,
                 borderRadius: "50%",
-                pointerEvents: "auto",
                 transform: spawned ? "scale(1)" : "scale(0.5)",
                 opacity: spawned ? 1 : 0,
                 transition: "transform 300ms ease, opacity 300ms ease",
                 zIndex: 100,
                 cursor: "grab",
                 userSelect: "none",
-                color: "rgb(210, 165, 80)",
+                color: "rgb(210,165,80)",
                 background: "radial-gradient(circle at 50% 50%, #000, #111)",
             }}
         >
